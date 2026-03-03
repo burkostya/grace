@@ -1,0 +1,66 @@
+<KnowledgeGraph>
+  <ParabolaGenerator_v1_0_Info>
+    <keywords>Parabola, SQLite, Gradio, Plotly, Education</keywords>
+    <terms>Quadratic Equation, Data Persistence, UI Controller</terms>
+    <annotation>Учебное приложение для генерации и визуализации точек параболы y = ax^2 + c с использованием SQLite для хранения данных.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="GenerateData">Пользователь вводит коэффициенты, система рассчитывает точки и сохраняет их в БД.</Scenario>
+      <Scenario NAME="VisualizeData">Пользователь запрашивает график, система извлекает данные из БД и строит интерактивную визуализацию.</Scenario>
+    </BusinessScenarios>
+
+    <datagenerator_py FILE="datagenerator.py" TYPE="BACKEND_MODULE">
+      <keywords>SQLite, Math, Persistence</keywords>
+      <annotation>Модуль для математических расчетов и взаимодействия с базой данных.</annotation>
+      <DataGenerator_CLASS NAME="DataGenerator" TYPE="IS_CLASS_OF_MODULE">
+        <annotation>Класс для управления жизненным циклом данных в SQLite.</annotation>
+        <init_METHOD NAME="__init__" TYPE="IS_METHOD_OF_CLASS">
+          <annotation>Инициализирует файл БД и создает таблицу points.</annotation>
+        </init_METHOD>
+        <generate_points_METHOD NAME="generate_points" TYPE="IS_METHOD_OF_CLASS">
+          <annotation>Рассчитывает y = ax^2 + c и выполняет пакетную вставку в БД.</annotation>
+        </generate_points_METHOD>
+        <get_all_points_METHOD NAME="get_all_points" TYPE="IS_METHOD_OF_CLASS">
+          <annotation>Извлекает все записи из таблицы points, отсортированные по x.</annotation>
+        </get_all_points_METHOD>
+      </DataGenerator_CLASS>
+    </datagenerator_py>
+
+    <ui_controller_py FILE="ui_controller.py" TYPE="CONTROLLER_MODULE">
+      <keywords>Controller, Pandas, Plotly</keywords>
+      <annotation>Прослойка между интерфейсом и бизнес-логикой.</annotation>
+      <UIController_CLASS NAME="UIController" TYPE="IS_CLASS_OF_MODULE">
+        <annotation>Управляет потоком данных между UI и DataGenerator.</annotation>
+        <init_METHOD NAME="__init__" TYPE="IS_METHOD_OF_CLASS">
+          <annotation>Создает экземпляр DataGenerator.</annotation>
+        </init_METHOD>
+        <handle_generate_METHOD NAME="handle_generate" TYPE="IS_METHOD_OF_CLASS">
+          <annotation>Координирует генерацию данных и возвращает DataFrame.</annotation>
+          <CrossLinks>
+            <Link TARGET="datagenerator_py_DataGenerator_generate_points_METHOD" TYPE="CALLS_METHOD" />
+            <Link TARGET="datagenerator_py_DataGenerator_get_all_points_METHOD" TYPE="CALLS_METHOD" />
+          </CrossLinks>
+        </handle_generate_METHOD>
+        <handle_draw_METHOD NAME="handle_draw" TYPE="IS_METHOD_OF_CLASS">
+          <annotation>Извлекает данные и формирует объект Plotly Figure.</annotation>
+          <CrossLinks>
+            <Link TARGET="datagenerator_py_DataGenerator_get_all_points_METHOD" TYPE="CALLS_METHOD" />
+          </CrossLinks>
+        </handle_draw_METHOD>
+      </UIController_CLASS>
+    </ui_controller_py>
+
+    <app_py FILE="app.py" TYPE="UI_MODULE">
+      <keywords>Gradio, Frontend</keywords>
+      <annotation>Точка входа в приложение, описание интерфейса Gradio.</annotation>
+      <CrossLinks>
+        <Link TARGET="ui_controller_py_UIController_CLASS" TYPE="CREATES_INSTANCE_OF" />
+        <Link TARGET="ui_controller_py_UIController_handle_generate_METHOD" TYPE="SENDS_EVENT_TO" />
+        <Link TARGET="ui_controller_py_UIController_handle_draw_METHOD" TYPE="SENDS_EVENT_TO" />
+      </CrossLinks>
+    </app_py>
+
+    <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+      <annotation>App.py (UI) -> UIController (Logic) -> DataGenerator (DB/Math)</annotation>
+    </ProjectCrossLinks>
+  </ParabolaGenerator_v1_0_Info>
+</KnowledgeGraph>
