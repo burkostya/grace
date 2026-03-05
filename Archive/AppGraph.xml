@@ -29,7 +29,7 @@
       <keywords>Controller, Pandas, Plotly</keywords>
       <annotation>Прослойка между интерфейсом и бизнес-логикой.</annotation>
       <UIController_CLASS NAME="UIController" TYPE="IS_CLASS_OF_MODULE">
-        <annotation>Управляет потоком данных между UI и DataGenerator.</annotation>
+        <annotation>Управляет потоком данных между UI and DataGenerator.</annotation>
         <init_METHOD NAME="__init__" TYPE="IS_METHOD_OF_CLASS">
           <annotation>Создает экземпляр DataGenerator.</annotation>
         </init_METHOD>
@@ -63,4 +63,56 @@
       <annotation>App.py (UI) -> UIController (Logic) -> DataGenerator (DB/Math)</annotation>
     </ProjectCrossLinks>
   </ParabolaGenerator_v1_0_Info>
+
+  <Lesson_v3_Info>
+    <keywords>Parabola, SQLite, Gradio, CLI, Config_JSON, LDD</keywords>
+    <terms>Agentic UX, Zero-Context Survival, Semantic Skeleton</terms>
+    <annotation>Учебное приложение Lesson_v3: генерация параболы с поддержкой CLI и Gradio, управление через JSON конфиг.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="GenerateData_UI">Пользователь вводит параметры в UI, система сохраняет их в config.json и генерирует точки в БД.</Scenario>
+      <Scenario NAME="GenerateData_CLI">Агент запускает CLI generate, система считывает параметры из config.json и обновляет БД.</Scenario>
+      <Scenario NAME="ExportData_CLI">Агент экспортирует данные из БД в CSV через CLI.</Scenario>
+    </BusinessScenarios>
+
+    <config_manager_py FILE="lesson_v3/src/config_manager.py" TYPE="CONFIG_MODULE">
+      <annotation>Управление параметрами в config.json.</annotation>
+      <load_config_FUNC NAME="load_config" TYPE="IS_FUNCTION_OF_MODULE" />
+      <save_config_FUNC NAME="save_config" TYPE="IS_FUNCTION_OF_MODULE" />
+    </config_manager_py>
+
+    <database_manager_py FILE="lesson_v3/src/database_manager.py" TYPE="DATA_MODULE">
+      <annotation>Взаимодействие с SQLite (parabola.db).</annotation>
+      <init_db_FUNC NAME="init_db" TYPE="IS_FUNCTION_OF_MODULE" />
+      <save_points_FUNC NAME="save_points" TYPE="IS_FUNCTION_OF_MODULE" />
+      <load_points_FUNC NAME="load_points" TYPE="IS_FUNCTION_OF_MODULE" />
+    </database_manager_py>
+
+    <parabola_logic_py FILE="lesson_v3/src/parabola_logic.py" TYPE="LOGIC_MODULE">
+      <annotation>Математический расчет y = ax^2 + c.</annotation>
+      <generate_parabola_points_FUNC NAME="generate_parabola_points" TYPE="IS_FUNCTION_OF_MODULE" />
+    </parabola_logic_py>
+
+    <cli_py FILE="lesson_v3/src/cli.py" TYPE="ENTRY_POINT">
+      <annotation>CLI интерфейс для автономного управления.</annotation>
+      <CrossLinks>
+        <Link TARGET="config_manager_py_load_config_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="parabola_logic_py_generate_parabola_points_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="database_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </cli_py>
+
+    <ui_controller_py FILE="lesson_v3/src/ui_controller.py" TYPE="CONTROLLER_MODULE">
+      <annotation>Логика обработки событий Gradio.</annotation>
+      <on_generate_click_FUNC NAME="on_generate_click" TYPE="IS_FUNCTION_OF_MODULE" />
+      <on_draw_click_FUNC NAME="on_draw_click" TYPE="IS_FUNCTION_OF_MODULE" />
+    </ui_controller_py>
+
+    <run_lesson_v3_py FILE="run_lesson_v3.py" TYPE="ENTRY_POINT">
+      <annotation>Запуск Gradio сервера.</annotation>
+      <CrossLinks>
+        <Link TARGET="ui_controller_py_on_generate_click_FUNC" TYPE="SENDS_EVENT_TO" />
+        <Link TARGET="ui_controller_py_on_draw_click_FUNC" TYPE="SENDS_EVENT_TO" />
+      </CrossLinks>
+    </run_lesson_v3_py>
+  </Lesson_v3_Info>
 </KnowledgeGraph>
