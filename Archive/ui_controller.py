@@ -18,7 +18,7 @@
 import pandas as pd
 import plotly.express as px
 import logging
-from datagenerator import DataGenerator
+from Archive.datagenerator import DataGenerator
 
 logger = logging.getLogger(__name__)
 

@@ -1,0 +1,7 @@
+{
+  "db_path": "lesson_v4/parabola.db",
+  "default_a": 1.0,
+  "default_c": 0.0,
+  "range_x": [-10, 10],
+  "step": 0.5
+}

@@ -8,7 +8,7 @@
 
 import pytest
 import os
-from datagenerator import DataGenerator
+from Archive.datagenerator import DataGenerator
 
 # START_FUNCTION_test_db_initialization
 # START_CONTRACT:
