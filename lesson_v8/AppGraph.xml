@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeGraph>
+  <lesson_v8_Info TYPE="PROJECT_INFO">
+    <keywords>parabola, generator, gradio, cli, sqlite, python, lesson</keywords>
+    <terms>парабола, генератор точек, графический интерфейс, командная строка, база данных</terms>
+    <annotation>Учебное приложение lesson_v8 для генерации и визуализации точек параболы y = ax^2 + c.</annotation>
+    <BusinessScenarios>
+      <Scenario>Пользователь генерирует точки параболы через UI или CLI</Scenario>
+      <Scenario>Пользователь визуализирует параболу через интерактивный график</Scenario>
+      <Scenario>Пользователь экспортирует данные в CSV через CLI</Scenario>
+    </BusinessScenarios>
+  </lesson_v8_Info>
+
+  <lesson_v8_config_json FILE="lesson_v8/config.json" TYPE="DATA_FILE">
+    <keywords>config, json, state management</keywords>
+    <terms>конфигурация, параметры, состояние</terms>
+    <annotation>Файл конфигурации параметров параболы (a, c, x_min, x_max).</annotation>
+  </lesson_v8_config_json>
+
+  <config_manager_py FILE="lesson_v8/src/config_manager.py" TYPE="UTILITY">
+    <keywords>config, json, persistence, state</keywords>
+    <terms>менеджер конфигурации, сохранение состояния, чтение конфига</terms>
+    <annotation>Управление чтением и записью config.json.</annotation>
+    <CrossLinks>
+      <Link TARGET="lesson_v8_config_json" TYPE="READS_DATA_FROM" />
+      <Link TARGET="lesson_v8_config_json" TYPE="WRITES_DATA_TO" />
+    </CrossLinks>
+  </config_manager_py>
+
+  <parabola_logic_py FILE="lesson_v8/src/parabola_logic.py" TYPE="BUSINESS_LOGIC">
+    <keywords>parabola, math, numpy, pandas, calculation</keywords>
+    <terms>математика, вычисление, точки параболы, квадратичная функция</terms>
+    <annotation>Математический расчет точек параболы y = ax^2 + c.</annotation>
+    <CrossLinks>
+      <Link TARGET="config_manager_py" TYPE="USES" />
+    </CrossLinks>
+  </parabola_logic_py>
+
+  <database_manager_py FILE="lesson_v8/src/database_manager.py" TYPE="DATA_ACCESS">
+    <keywords>sqlite, database, persistence, pandas</keywords>
+    <terms>база данных, SQLite, сохранение данных, загрузка данных</terms>
+    <annotation>Работа с SQLite: создание таблиц, сохранение и чтение точек.</annotation>
+    <CrossLinks>
+      <Link TARGET="parabola_points_db" TYPE="WRITES_DATA_TO" />
+      <Link TARGET="parabola_points_db" TYPE="READS_DATA_FROM" />
+    </CrossLinks>
+  </database_manager_py>
+
+  <parabola_points_db FILE="lesson_v8/parabola_points.db" TYPE="DATABASE">
+    <keywords>sqlite, database, points, parabola</keywords>
+    <terms>база данных SQLite, таблица точек</terms>
+    <annotation>Файл базы данных SQLite для хранения точек параболы.</annotation>
+  </parabola_points_db>
+
+  <cli_py FILE="lesson_v8/src/cli.py" TYPE="INTERFACE">
+    <keywords>cli, argparse, command line, agentic ux</keywords>
+    <terms>командная строка, интерфейс, автоматизация</terms>
+    <annotation>CLI интерфейс для автономной генерации и экспорта данных.</annotation>
+    <CrossLinks>
+      <Link TARGET="config_manager_py" TYPE="USES" />
+      <Link TARGET="parabola_logic_py" TYPE="USES" />
+      <Link TARGET="database_manager_py" TYPE="USES" />
+    </CrossLinks>
+  </cli_py>
+
+  <ui_controller_py FILE="lesson_v8/src/ui_controller.py" TYPE="INTERFACE">
+    <keywords>gradio, ui, interface, plotly, visualization</keywords>
+    <terms>графический интерфейс, визуализация, обработчики событий</terms>
+    <annotation>Контроллер Gradio: обработка ввода, вызов логики и построение графиков.</annotation>
+    <CrossLinks>
+      <Link TARGET="config_manager_py" TYPE="USES" />
+      <Link TARGET="parabola_logic_py" TYPE="USES" />
+      <Link TARGET="database_manager_py" TYPE="USES" />
+    </CrossLinks>
+  </ui_controller_py>
+
+  <run_lesson_v8_py FILE="run_lesson_v8.py" TYPE="ENTRY_POINT">
+    <keywords>entry point, gradio, server, startup</keywords>
+    <terms>точка запуска, сервер, приложение</terms>
+    <annotation>Точка запуска Gradio сервера.</annotation>
+    <CrossLinks>
+      <Link TARGET="ui_controller_py" TYPE="CALLS" />
+    </CrossLinks>
+  </run_lesson_v8_py>
+
+  <test_app_py FILE="lesson_v8/tests/test_app.py" TYPE="TEST">
+    <keywords>pytest, testing, ldd, coverage</keywords>
+    <terms>тестирование, проверка, покрытие кода</terms>
+    <annotation>Тестовый модуль для проверки функциональности приложения.</annotation>
+    <CrossLinks>
+      <Link TARGET="config_manager_py" TYPE="TESTS" />
+      <Link TARGET="parabola_logic_py" TYPE="TESTS" />
+      <Link TARGET="database_manager_py" TYPE="TESTS" />
+      <Link TARGET="cli_py" TYPE="TESTS" />
+      <Link TARGET="ui_controller_py" TYPE="TESTS" />
+    </CrossLinks>
+  </test_app_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <annotation>Высокоуровневые взаимодействия между модулями приложения.</annotation>
+    <Link TARGET="config_manager_py" TYPE="PROVIDES_STATE_TO" SOURCE="cli_py" />
+    <Link TARGET="config_manager_py" TYPE="PROVIDES_STATE_TO" SOURCE="ui_controller_py" />
+    <Link TARGET="parabola_logic_py" TYPE="CALCULATES_POINTS_FOR" SOURCE="cli_py" />
+    <Link TARGET="parabola_logic_py" TYPE="CALCULATES_POINTS_FOR" SOURCE="ui_controller_py" />
+    <Link TARGET="database_manager_py" TYPE="SAVES_DATA_FROM" SOURCE="cli_py" />
+    <Link TARGET="database_manager_py" TYPE="SAVES_DATA_FROM" SOURCE="ui_controller_py" />
+    <Link TARGET="database_manager_py" TYPE="LOADS_DATA_FOR" SOURCE="ui_controller_py" />
+    <Link TARGET="database_manager_py" TYPE="LOADS_DATA_FOR" SOURCE="cli_py" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>

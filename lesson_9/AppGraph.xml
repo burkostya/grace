@@ -1,0 +1,122 @@
+<KnowledgeGraph>
+    <Lesson_9_Info>
+        <keywords>Parabola, SQLite, Gradio, CLI, Plotly</keywords>
+        <terms>Quadratic Function, Persistence, Visualization</terms>
+        <annotation>Приложение для расчета, хранения и визуализации точек параболы y = ax^2 + c.</annotation>
+        <BusinessScenarios>
+            <Scenario NAME="Web Visualization">Пользователь настраивает параметры в браузере и видит интерактивный график.</Scenario>
+            <Scenario NAME="CLI Automation">Агент генерирует данные или экспортирует их в CSV через командную строку.</Scenario>
+        </BusinessScenarios>
+    </Lesson_9_Info>
+
+    <lesson_9_src_config_manager_py TYPE="DATA_PROCESSING_MODULE" FILE="lesson_9/src/config_manager.py">
+        <keywords>JSON, Configuration</keywords>
+        <terms>config.json, defaults</terms>
+        <annotation>Управление конфигурационным файлом для параметров параболы.</annotation>
+        <load_config_FUNC NAME="load_config" TYPE="FUNCTION">
+            <keywords>Read, JSON</keywords>
+            <annotation>Загружает конфигурацию из файла или возвращает дефолты.</annotation>
+        </load_config_FUNC>
+        <save_config_FUNC NAME="save_config" TYPE="FUNCTION">
+            <keywords>Write, JSON</keywords>
+            <annotation>Сохраняет конфигурацию в файл.</annotation>
+        </save_config_FUNC>
+    </lesson_9_src_config_manager_py>
+
+    <lesson_9_src_database_manager_py TYPE="DATA_PROCESSING_MODULE" FILE="lesson_9/src/database_manager.py">
+        <keywords>SQLite, Persistence</keywords>
+        <terms>parabola.db, points table</terms>
+        <annotation>Управление базой данных SQLite для хранения точек.</annotation>
+        <init_db_FUNC NAME="init_db" TYPE="FUNCTION">
+            <annotation>Инициализирует БД и создает таблицы.</annotation>
+        </init_db_FUNC>
+        <save_points_FUNC NAME="save_points" TYPE="FUNCTION">
+            <annotation>Очищает старые данные и сохраняет новые точки.</annotation>
+            <CrossLinks>
+                <Link TARGET="init_db_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </save_points_FUNC>
+        <get_points_FUNC NAME="get_points" TYPE="FUNCTION">
+            <annotation>Получает все точки из БД.</annotation>
+        </get_points_FUNC>
+    </lesson_9_src_database_manager_py>
+
+    <lesson_9_src_parabola_logic_py TYPE="DATA_PROCESSING_MODULE" FILE="lesson_9/src/parabola_logic.py">
+        <keywords>Mathematics, Calculation</keywords>
+        <terms>Quadratic Equation</terms>
+        <annotation>Математическое ядро для расчета координат параболы.</annotation>
+        <calculate_parabola_points_FUNC NAME="calculate_parabola_points" TYPE="FUNCTION">
+            <annotation>Рассчитывает список точек параболы y = ax^2 + c.</annotation>
+        </calculate_parabola_points_FUNC>
+    </lesson_9_src_parabola_logic_py>
+
+    <lesson_9_src_cli_py TYPE="INTERFACE_MODULE" FILE="lesson_9/src/cli.py">
+        <keywords>CLI, Argparse</keywords>
+        <annotation>Интерфейс командной строки.</annotation>
+        <cmd_generate_FUNC NAME="cmd_generate" TYPE="FUNCTION">
+            <annotation>Команда генерации данных на основе конфига.</annotation>
+            <CrossLinks>
+                <Link TARGET="load_config_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="calculate_parabola_points_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="save_points_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </cmd_generate_FUNC>
+        <cmd_export_csv_FUNC NAME="cmd_export_csv" TYPE="FUNCTION">
+            <annotation>Команда экспорта данных в CSV.</annotation>
+            <CrossLinks>
+                <Link TARGET="get_points_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </cmd_export_csv_FUNC>
+        <main_FUNC NAME="main" TYPE="FUNCTION">
+            <annotation>Точка входа CLI.</annotation>
+        </main_FUNC>
+    </lesson_9_src_cli_py>
+
+    <lesson_9_src_ui_controller_py TYPE="INTERFACE_MODULE" FILE="lesson_9/src/ui_controller.py">
+        <keywords>Gradio, Plotly, UI</keywords>
+        <annotation>Управление пользовательским интерфейсом.</annotation>
+        <handle_generate_FUNC NAME="handle_generate" TYPE="FUNCTION">
+            <annotation>Обработчик генерации данных из UI.</annotation>
+            <CrossLinks>
+                <Link TARGET="save_config_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="calculate_parabola_points_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="save_points_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </handle_generate_FUNC>
+        <handle_draw_graph_FUNC NAME="handle_draw_graph" TYPE="FUNCTION">
+            <annotation>Обработчик отрисовки графика.</annotation>
+            <CrossLinks>
+                <Link TARGET="get_points_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </handle_draw_graph_FUNC>
+        <create_ui_FUNC NAME="create_ui" TYPE="FUNCTION">
+            <annotation>Создание интерфейса Gradio.</annotation>
+            <CrossLinks>
+                <Link TARGET="load_config_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </create_ui_FUNC>
+    </lesson_9_src_ui_controller_py>
+
+    <run_lesson_9_py TYPE="ENTRY_POINT_MODULE" FILE="run_lesson_9.py">
+        <keywords>Startup, Server</keywords>
+        <annotation>Главный скрипт запуска веб-приложения.</annotation>
+        <main_FUNC NAME="main" TYPE="FUNCTION">
+            <annotation>Инициализация БД и запуск Gradio.</annotation>
+            <CrossLinks>
+                <Link TARGET="init_db_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="create_ui_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </main_FUNC>
+    </run_lesson_9_py>
+
+    <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+        <Link SOURCE="run_lesson_9_py" TARGET="lesson_9_src_ui_controller_py" TYPE="DEPENDS_ON"/>
+        <Link SOURCE="run_lesson_9_py" TARGET="lesson_9_src_database_manager_py" TYPE="DEPENDS_ON"/>
+        <Link SOURCE="lesson_9_src_ui_controller_py" TARGET="lesson_9_src_config_manager_py" TYPE="USES"/>
+        <Link SOURCE="lesson_9_src_ui_controller_py" TARGET="lesson_9_src_database_manager_py" TYPE="USES"/>
+        <Link SOURCE="lesson_9_src_ui_controller_py" TARGET="lesson_9_src_parabola_logic_py" TYPE="USES"/>
+        <Link SOURCE="lesson_9_src_cli_py" TARGET="lesson_9_src_config_manager_py" TYPE="USES"/>
+        <Link SOURCE="lesson_9_src_cli_py" TARGET="lesson_9_src_database_manager_py" TYPE="USES"/>
+        <Link SOURCE="lesson_9_src_cli_py" TARGET="lesson_9_src_parabola_logic_py" TYPE="USES"/>
+    </ProjectCrossLinks>
+</KnowledgeGraph>
