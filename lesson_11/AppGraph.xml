@@ -1,0 +1,137 @@
+<KnowledgeGraph>
+  <Lesson_11_Info>
+    <keywords>Parabola, Gradio, SQLite, CLI, LDD 2.0</keywords>
+    <terms>Backend, UI Controller, Database Manager, Config Manager, Parabola Logic</terms>
+    <annotation>Архитектура приложения для генерации и визуализации параболы с поддержкой CLI и UI.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="Generate and Visualize">User -> UI -> Generate Data -> Save to DB -> Draw Graph</Scenario>
+      <Scenario NAME="CLI Management">Admin -> CLI -> Generate/Export -> CSV/DB Updated</Scenario>
+    </BusinessScenarios>
+  </Lesson_11_Info>
+
+  <lesson_11_src_config_manager_py FILE="lesson_11/src/config_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>JSON, Configuration, Persistence</keywords>
+    <terms>config.json, load, save</terms>
+    <annotation>Управление конфигурацией приложения через JSON файл.</annotation>
+    <load_config_FUNC NAME="load_config" TYPE="FUNCTION">
+      <annotation>Загружает параметры из JSON файла.</annotation>
+    </load_config_FUNC>
+    <save_config_FUNC NAME="save_config" TYPE="FUNCTION">
+      <annotation>Сохраняет параметры в JSON файл.</annotation>
+    </save_config_FUNC>
+  </lesson_11_src_config_manager_py>
+
+  <lesson_11_src_database_manager_py FILE="lesson_11/src/database_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>SQLite, Database, Persistence</keywords>
+    <terms>parabola_11.db, points table, SQL</terms>
+    <annotation>Управление персистентностью данных в базе данных SQLite.</annotation>
+    <init_db_FUNC NAME="init_db" TYPE="FUNCTION">
+      <annotation>Инициализирует таблицу points в БД.</annotation>
+    </init_db_FUNC>
+    <save_points_FUNC NAME="save_points" TYPE="FUNCTION">
+      <annotation>Заменяет все точки в БД на новые.</annotation>
+    </save_points_FUNC>
+    <get_points_FUNC NAME="get_points" TYPE="FUNCTION">
+      <annotation>Возвращает список всех точек из БД.</annotation>
+    </get_points_FUNC>
+  </lesson_11_src_database_manager_py>
+
+  <lesson_11_src_parabola_logic_py FILE="lesson_11/src/parabola_logic.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>Math, Parabola, Calculation</keywords>
+    <terms>y = ax^2 + c, point generation</terms>
+    <annotation>Математические расчеты для построения параболы.</annotation>
+    <calculate_points_FUNC NAME="calculate_points" TYPE="FUNCTION">
+      <annotation>Вычисляет координаты (x, y) для параболы.</annotation>
+    </calculate_points_FUNC>
+  </lesson_11_src_parabola_logic_py>
+
+  <lesson_11_src_ui_controller_py FILE="lesson_11/src/ui_controller.py" TYPE="UI_CONTROLLER_MODULE">
+    <keywords>Gradio, Plotly, UI, Controller</keywords>
+    <terms>Blocks, Slider, Plot, DataFrame</terms>
+    <annotation>Управление пользовательским интерфейсом Gradio.</annotation>
+    <handle_generate_FUNC NAME="handle_generate" TYPE="METHOD">
+      <annotation>Обрабатывает генерацию данных и сохранение.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_config_manager_py_save_config_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_parabola_logic_py_calculate_points_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_database_manager_py_save_points_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </handle_generate_FUNC>
+    <handle_draw_FUNC NAME="handle_draw" TYPE="METHOD">
+      <annotation>Отрисовывает график на основе данных из БД.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_database_manager_py_get_points_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </handle_draw_FUNC>
+    <create_ui_FUNC NAME="create_ui" TYPE="METHOD">
+      <annotation>Создает и настраивает интерфейс Gradio Blocks.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_database_manager_py_init_db_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_config_manager_py_load_config_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </create_ui_FUNC>
+  </lesson_11_src_ui_controller_py>
+
+  <lesson_11_src_cli_py FILE="lesson_11/src/cli.py" TYPE="CLI_MODULE">
+    <keywords>CLI, argparse, CSV, Export</keywords>
+    <terms>generate, export-csv, subcommands</terms>
+    <annotation>Интерфейс командной строки для управления бэкендом.</annotation>
+    <cmd_generate_FUNC NAME="cmd_generate" TYPE="FUNCTION">
+      <annotation>Выполняет генерацию точек на основе конфига.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_config_manager_py_load_config_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_parabola_logic_py_calculate_points_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_database_manager_py_save_points_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </cmd_generate_FUNC>
+    <cmd_export_csv_FUNC NAME="cmd_export_csv" TYPE="FUNCTION">
+      <annotation>Экспортирует данные из БД в CSV файл.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_database_manager_py_get_points_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </cmd_export_csv_FUNC>
+    <main_FUNC NAME="main" TYPE="FUNCTION">
+      <annotation>Точка входа в CLI приложение.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_database_manager_py_init_db_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </main_FUNC>
+  </lesson_11_src_cli_py>
+
+  <lesson_11_tests_test_app_py FILE="lesson_11/tests/test_app.py" TYPE="TEST_MODULE">
+    <keywords>Pytest, Integration, Smoke, Headless</keywords>
+    <terms>setup_test_env, test_backend, test_cli, test_ui</terms>
+    <annotation>Комплексное тестирование приложения.</annotation>
+    <test_backend_and_ldd_FUNC NAME="test_backend_and_ldd" TYPE="TEST_FUNCTION">
+      <annotation>Тест бэкенд логики и верификация LDD логов.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_parabola_logic_py_calculate_points_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_config_manager_py_save_config_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_config_manager_py_load_config_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_database_manager_py_init_db_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_database_manager_py_save_points_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_database_manager_py_get_points_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </test_backend_and_ldd_FUNC>
+    <test_cli_smoke_FUNC NAME="test_cli_smoke" TYPE="TEST_FUNCTION">
+      <annotation>Дымовой тест CLI интерфейса.</annotation>
+    </test_cli_smoke_FUNC>
+    <test_ui_headless_FUNC NAME="test_ui_headless" TYPE="TEST_FUNCTION">
+      <annotation>Headless тест обработчиков UI.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_11_src_database_manager_py_init_db_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_ui_controller_py_handle_generate_FUNC" TYPE="CALLS" />
+        <Link TARGET="lesson_11_src_ui_controller_py_handle_draw_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </test_ui_headless_FUNC>
+  </lesson_11_tests_test_app_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link SOURCE="lesson_11_src_ui_controller_py" TARGET="lesson_11_src_parabola_logic_py" TYPE="USES_LOGIC" />
+    <Link SOURCE="lesson_11_src_ui_controller_py" TARGET="lesson_11_src_database_manager_py" TYPE="USES_DB" />
+    <Link SOURCE="lesson_11_src_ui_controller_py" TARGET="lesson_11_src_config_manager_py" TYPE="USES_CONFIG" />
+    <Link SOURCE="lesson_11_src_cli_py" TARGET="lesson_11_src_parabola_logic_py" TYPE="USES_LOGIC" />
+    <Link SOURCE="lesson_11_src_cli_py" TARGET="lesson_11_src_database_manager_py" TYPE="USES_DB" />
+    <Link SOURCE="lesson_11_src_cli_py" TARGET="lesson_11_src_config_manager_py" TYPE="USES_CONFIG" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>

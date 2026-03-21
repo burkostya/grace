@@ -1,0 +1,44 @@
+<KnowledgeGraph>
+    <Lesson_12_Info TYPE="PROJECT_INFO">
+        <keywords>Dash, Parabola, SQLite, EditableGrid, HeadlessTesting</keywords>
+        <terms>DataTable, Callbacks, Waitress, LDD 2.0</terms>
+        <annotation>Учебное приложение для генерации и редактирования параболы на Dash 4.0.</annotation>
+    </Lesson_12_Info>
+
+    <lesson_12_handlers_py FILE="lesson_12/handlers.py" TYPE="LOGIC_MODULE">
+        <keywords>Math, Plotly, PureLogic</keywords>
+        <generate_parabola_points_FUNC NAME="generate_parabola_points" TYPE="DATA_GENERATOR">
+            <annotation>Генерирует DataFrame с точками параболы.</annotation>
+        </generate_parabola_points_FUNC>
+        <build_comparison_figure_FUNC NAME="build_comparison_figure" TYPE="VISUALIZER">
+            <annotation>Создает Plotly Figure для сравнения Original vs Edited.</annotation>
+        </build_comparison_figure_FUNC>
+    </lesson_12_handlers_py>
+
+    <lesson_12_app_py FILE="lesson_12/app.py" TYPE="UI_MODULE">
+        <keywords>Dash, Callbacks, Layout</keywords>
+        <on_generate_CALLBACK NAME="on_generate" TYPE="UI_EVENT_HANDLER">
+            <CrossLinks>
+                <Link TARGET="lesson_12_handlers_py.generate_parabola_points_FUNC" TYPE="CALLS" />
+            </CrossLinks>
+        </on_generate_CALLBACK>
+        <on_draw_CALLBACK NAME="on_draw" TYPE="UI_EVENT_HANDLER">
+            <CrossLinks>
+                <Link TARGET="lesson_12_handlers_py.build_comparison_figure_FUNC" TYPE="CALLS" />
+            </CrossLinks>
+        </on_draw_CALLBACK>
+    </lesson_12_app_py>
+
+    <lesson_12_db_manager_py FILE="lesson_12/db_manager.py" TYPE="DATA_MODULE">
+        <keywords>SQLite, Persistence</keywords>
+    </lesson_12_db_manager_py>
+
+    <lesson_12_config_manager_py FILE="lesson_12/config_manager.py" TYPE="CONFIG_MODULE">
+        <keywords>JSON, Settings</keywords>
+    </lesson_12_config_manager_py>
+
+    <lesson_12_cli_py FILE="lesson_12/cli.py" TYPE="CLI_MODULE">
+        <keywords>Argparse, Automation</keywords>
+    </lesson_12_cli_py>
+
+</KnowledgeGraph>

@@ -1,0 +1,74 @@
+<KnowledgeGraph>
+  <Lesson_15_Info>
+    <keywords>Parabola, SQLite, Gradio, Plotly, LDD 2.0, Agentic UX</keywords>
+    <terms>Layer Isolation, Headless Testing, AI Belief State</terms>
+    <annotation>Учебный пример Lesson_15: Генерация и визуализация параболы y = ax^2 + c.</annotation>
+    <BusinessScenarios>
+      <Scenario>Пользователь вводит параметры в UI -> Генерируются точки -> Строится график.</Scenario>
+      <Scenario>Агент запускает CLI generate -> Точки сохраняются в БД автоматически.</Scenario>
+    </BusinessScenarios>
+  </Lesson_15_Info>
+
+  <lesson_15_src_config_manager_py FILE="lesson_15/src/config_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>JSON, Config, Persistence</keywords>
+    <ConfigManager_CLASS NAME="ConfigManager" TYPE="IS_CLASS_OF_MODULE">
+      <load_METHOD NAME="load" TYPE="IS_METHOD_OF_CLASS" />
+      <save_METHOD NAME="save" TYPE="IS_METHOD_OF_CLASS" />
+    </ConfigManager_CLASS>
+  </lesson_15_src_config_manager_py>
+
+  <lesson_15_src_database_manager_py FILE="lesson_15/src/database_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>SQLite, SQL, Persistence</keywords>
+    <DatabaseManager_CLASS NAME="DatabaseManager" TYPE="IS_CLASS_OF_MODULE">
+      <init_db_METHOD NAME="init_db" TYPE="IS_METHOD_OF_CLASS" />
+      <save_points_METHOD NAME="save_points" TYPE="IS_METHOD_OF_CLASS" />
+      <get_points_METHOD NAME="get_points" TYPE="IS_METHOD_OF_CLASS" />
+    </DatabaseManager_CLASS>
+  </lesson_15_src_database_manager_py>
+
+  <lesson_15_src_parabola_logic_py FILE="lesson_15/src/parabola_logic.py" TYPE="BUSINESS_LOGIC_MODULE">
+    <keywords>Math, Numpy, Parabola</keywords>
+    <generate_points_FUNC NAME="generate_points" TYPE="FUNCTION" />
+  </lesson_15_src_parabola_logic_py>
+
+  <lesson_15_src_cli_py FILE="lesson_15/src/cli.py" TYPE="INTERFACE_MODULE">
+    <keywords>CLI, Argparse, AgenticUX</keywords>
+    <main_FUNC NAME="main" TYPE="FUNCTION">
+      <CrossLinks>
+        <Link TARGET="lesson_15_src_config_manager_py" TYPE="CALLS_METHOD" />
+        <Link TARGET="lesson_15_src_database_manager_py" TYPE="CALLS_METHOD" />
+        <Link TARGET="lesson_15_src_parabola_logic_py" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </main_FUNC>
+  </lesson_15_src_cli_py>
+
+  <lesson_15_src_ui_controller_py FILE="lesson_15/src/ui_controller.py" TYPE="INTERFACE_MODULE">
+    <keywords>Gradio, Plotly, Controller</keywords>
+    <on_generate_FUNC NAME="on_generate" TYPE="FUNCTION">
+      <CrossLinks>
+        <Link TARGET="lesson_15_src_config_manager_py" TYPE="CALLS_METHOD" />
+        <Link TARGET="lesson_15_src_database_manager_py" TYPE="CALLS_METHOD" />
+        <Link TARGET="lesson_15_src_parabola_logic_py" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </on_generate_FUNC>
+    <on_draw_FUNC NAME="on_draw" TYPE="FUNCTION">
+      <CrossLinks>
+        <Link TARGET="lesson_15_src_database_manager_py" TYPE="CALLS_METHOD" />
+      </CrossLinks>
+    </on_draw_FUNC>
+  </lesson_15_src_ui_controller_py>
+
+  <run_lesson_15_py FILE="run_lesson_15.py" TYPE="ENTRY_POINT">
+    <keywords>Gradio, Server, Launch</keywords>
+    <main_FUNC NAME="main" TYPE="FUNCTION">
+      <CrossLinks>
+        <Link TARGET="lesson_15_src_ui_controller_py" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </main_FUNC>
+  </run_lesson_15_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link SOURCE="lesson_15_src_cli_py" TARGET="lesson_15_src_parabola_logic_py" TYPE="DEPENDS_ON" />
+    <Link SOURCE="lesson_15_src_ui_controller_py" TARGET="lesson_15_src_parabola_logic_py" TYPE="DEPENDS_ON" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>

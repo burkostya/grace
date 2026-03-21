@@ -1,0 +1,99 @@
+<KnowledgeGraph>
+    <lesson_10_Info>
+        <keywords>Parabola, Education, LayeredArchitecture, Gradio, SQLite, LDD</keywords>
+        <terms>
+            <term NAME="LDD">Log Driven Development - методология разработки через логирование состояний.</term>
+            <term NAME="Agentic UX">Интерфейс, оптимизированный для автономных AI-агентов.</term>
+        </terms>
+        <annotation>Учебное приложение Lesson 10 для генерации и визуализации параболы y = ax^2 + c.</annotation>
+        <BusinessScenarios>
+            <Scenario NAME="Generate and Visualize">Пользователь настраивает параметры, генерирует данные в БД и строит график.</Scenario>
+            <Scenario NAME="Autonomous Export">AI-агент через CLI генерирует данные и экспортирует их в CSV для внешнего анализа.</Scenario>
+        </BusinessScenarios>
+    </lesson_10_Info>
+
+    <lesson_10_src_config_manager_py FILE="lesson_10/src/config_manager.py" TYPE="DATA_PROCESSING_MODULE">
+        <keywords>JSON, Config, Persistence</keywords>
+        <load_config_FUNC NAME="load_config" TYPE="FUNC">
+            <annotation>Загружает или инициализирует config.json.</annotation>
+        </load_config_FUNC>
+        <save_config_FUNC NAME="save_config" TYPE="FUNC">
+            <annotation>Сохраняет параметры в config.json.</annotation>
+        </save_config_FUNC>
+    </lesson_10_src_config_manager_py>
+
+    <lesson_10_src_database_manager_py FILE="lesson_10/src/database_manager.py" TYPE="DATA_PROCESSING_MODULE">
+        <keywords>SQLite, SQL, Persistence</keywords>
+        <init_db_FUNC NAME="init_db" TYPE="FUNC">
+            <annotation>Создает схему БД.</annotation>
+        </init_db_FUNC>
+        <save_points_FUNC NAME="save_points" TYPE="FUNC">
+            <annotation>Атомарно обновляет точки в БД.</annotation>
+            <CrossLinks>
+                <Link TARGET="lesson_10_src_database_manager_py_init_db_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </save_points_FUNC>
+        <get_points_df_FUNC NAME="get_points_df" TYPE="FUNC">
+            <annotation>Возвращает данные в формате pandas DataFrame.</annotation>
+        </get_points_df_FUNC>
+    </lesson_10_src_database_manager_py>
+
+    <lesson_10_src_parabola_logic_py FILE="lesson_10/src/parabola_logic.py" TYPE="LOGIC_MODULE">
+        <keywords>Math, Numpy, Parabola</keywords>
+        <calculate_parabola_points_FUNC NAME="calculate_parabola_points" TYPE="FUNC">
+            <annotation>Вычисляет координаты y = ax^2 + c.</annotation>
+        </calculate_parabola_points_FUNC>
+    </lesson_10_src_parabola_logic_py>
+
+    <lesson_10_src_ui_controller_py FILE="lesson_10/src/ui_controller.py" TYPE="CONTROLLER_MODULE">
+        <keywords>Gradio, Plotly, Integration</keywords>
+        <handle_generate_data_FUNC NAME="handle_generate_data" TYPE="FUNC">
+            <annotation>Координирует сохранение конфига, расчет и запись в БД.</annotation>
+            <CrossLinks>
+                <Link TARGET="lesson_10_src_config_manager_py_save_config_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="lesson_10_src_parabola_logic_py_calculate_parabola_points_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="lesson_10_src_database_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </handle_generate_data_FUNC>
+        <handle_draw_graph_FUNC NAME="handle_draw_graph" TYPE="FUNC">
+            <annotation>Формирует Plotly график из данных БД.</annotation>
+            <CrossLinks>
+                <Link TARGET="lesson_10_src_database_manager_py_get_points_df_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </handle_draw_graph_FUNC>
+    </lesson_10_src_ui_controller_py>
+
+    <lesson_10_src_cli_py FILE="lesson_10/src/cli.py" TYPE="ENTRY_POINT">
+        <keywords>CLI, Argparse, AgenticUX</keywords>
+        <run_generate_FUNC NAME="run_generate" TYPE="FUNC">
+            <annotation>Генерация через CLI на основе конфига.</annotation>
+            <CrossLinks>
+                <Link TARGET="lesson_10_src_config_manager_py_load_config_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="lesson_10_src_parabola_logic_py_calculate_parabola_points_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="lesson_10_src_database_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </run_generate_FUNC>
+        <run_export_csv_FUNC NAME="run_export_csv" TYPE="FUNC">
+            <annotation>Экспорт данных в CSV.</annotation>
+            <CrossLinks>
+                <Link TARGET="lesson_10_src_database_manager_py_get_points_df_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </run_export_csv_FUNC>
+    </lesson_10_src_cli_py>
+
+    <run_lesson_10_py FILE="run_lesson_10.py" TYPE="ENTRY_POINT">
+        <keywords>Gradio, Server, UI</keywords>
+        <main_FUNC NAME="main" TYPE="FUNC">
+            <annotation>Запуск Gradio сервера.</annotation>
+            <CrossLinks>
+                <Link TARGET="lesson_10_src_ui_controller_py_handle_generate_data_FUNC" TYPE="CALLS_FUNCTION"/>
+                <Link TARGET="lesson_10_src_ui_controller_py_handle_draw_graph_FUNC" TYPE="CALLS_FUNCTION"/>
+            </CrossLinks>
+        </main_FUNC>
+    </run_lesson_10_py>
+
+    <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+        <Link TARGET="lesson_10_src_ui_controller_py" TYPE="ORCHESTRATES_LOGIC"/>
+        <Link TARGET="lesson_10_src_cli_py" TYPE="ORCHESTRATES_LOGIC"/>
+    </ProjectCrossLinks>
+</KnowledgeGraph>

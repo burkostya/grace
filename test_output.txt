@@ -1,0 +1,19 @@
+============================= test session starts =============================
+platform win32 -- Python 3.10.6, pytest-9.0.2, pluggy-1.6.0
+rootdir: c:\Users\ivano\PythonProjects\NEW_LESSONS
+plugins: anyio-4.12.0, langsmith-0.4.59
+collected 3 items
+
+lesson_15\tests\test_app.py 
+--- LDD Telemetry (IMP:7-10) ---
+.
+CLI Generate STDOUT: [INFO][2026-03-21 16:48:27,911] [DB][IMP:7][DatabaseManager][init_db][Schema] БД инициализирована. [SUCCESS]
+[INFO][2026-03-21 16:48:27,911] [CLI][IMP:7][main][Command] Выполнение generate с параметрами: {'a': 1, 'c': 0, 'x_min': -10, 'x_max': 10} [INFO]
+[INFO][2026-03-21 16:48:27,911] [BeliefState][IMP:9][generate_points][Result] Рассчитано 100 точек. [VALUE]
+[INFO][2026-03-21 16:48:27,938] [BeliefState][IMP:9][DatabaseManager][save_points][IO] Сохранено 100 точек. [VALUE]
+[INFO][2026-03-21 16:48:27,938] [BeliefState][IMP:9][main][Result] Генерация завершена успешно. [VALUE]
+
+CLI Generate STDERR: 
+..
+
+============================== 3 passed in 3.95s ==============================

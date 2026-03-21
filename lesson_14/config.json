@@ -1,0 +1,6 @@
+{
+    "function_type": "sin",
+    "x_start": 0,
+    "x_end": 6.28,
+    "num_points": 100
+}
