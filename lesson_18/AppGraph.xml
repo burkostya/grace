@@ -1,0 +1,86 @@
+<KnowledgeGraph>
+  <Lesson_18_Parabola_Generator_Info>
+    <keywords>Parabola, Gradio, SQLite, Plotly, Education, AntiLoop</keywords>
+    <terms>Quadratic Equation, Data Persistence, Headless Testing, LDD, Semantic Exoskeleton</terms>
+    <annotation>Учебное приложение для генерации и визуализации параболы y = ax^2 + c с усиленным протоколом тестирования.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="Generate and Save Data">Пользователь вводит параметры, система рассчитывает точки, сохраняет их в SQLite и отображает в таблице.</Scenario>
+      <Scenario NAME="Visualize Data">Пользователь запрашивает отрисовку, система загружает данные из БД и строит интерактивный график Plotly.</Scenario>
+      <Scenario NAME="Anti-Loop Testing">Система тестирования предотвращает зацикливание агентов через прогрессивные чек-листы и советы.</Scenario>
+    </BusinessScenarios>
+  </Lesson_18_Parabola_Generator_Info>
+
+  <lesson_18_src_config_manager_py FILE="lesson_18/src/config_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>JSON, Config, Persistence</keywords>
+    <ConfigManager_CLASS NAME="ConfigManager" TYPE="IS_CLASS_OF_MODULE">
+      <load_config_METHOD NAME="load_config" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Загружает параметры из JSON файла.</annotation>
+      </load_config_METHOD>
+      <save_config_METHOD NAME="save_config" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Сохраняет параметры в JSON файл.</annotation>
+      </save_config_METHOD>
+    </ConfigManager_CLASS>
+  </lesson_18_src_config_manager_py>
+
+  <lesson_18_src_data_processor_py FILE="lesson_18/src/data_processor.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>SQLite, Pandas, Math, Parabola</keywords>
+    <DataProcessor_CLASS NAME="DataProcessor" TYPE="IS_CLASS_OF_MODULE">
+      <generate_points_METHOD NAME="generate_points" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Рассчитывает 100 точек параболы.</annotation>
+      </generate_points_METHOD>
+      <save_to_db_METHOD NAME="save_to_db" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Сохраняет DataFrame в SQLite.</annotation>
+      </save_to_db_METHOD>
+      <load_from_db_METHOD NAME="load_from_db" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Загружает данные из SQLite.</annotation>
+      </load_from_db_METHOD>
+    </DataProcessor_CLASS>
+  </lesson_18_src_data_processor_py>
+
+  <lesson_18_src_ui_controller_py FILE="lesson_18/src/ui_controller.py" TYPE="UI_CONTROLLER_MODULE">
+    <keywords>Gradio, Plotly, EventHandling</keywords>
+    <UIController_CLASS NAME="UIController" TYPE="IS_CLASS_OF_MODULE">
+      <handle_generate_METHOD NAME="handle_generate" TYPE="IS_METHOD_OF_CLASS">
+        <CrossLinks>
+          <Link TARGET="lesson_18_src_config_manager_py" TYPE="CALLS_METHOD" NAME="save_config"/>
+          <Link TARGET="lesson_18_src_data_processor_py" TYPE="CALLS_METHOD" NAME="generate_points"/>
+          <Link TARGET="lesson_18_src_data_processor_py" TYPE="CALLS_METHOD" NAME="save_to_db"/>
+        </CrossLinks>
+      </handle_generate_METHOD>
+      <handle_draw_METHOD NAME="handle_draw" TYPE="IS_METHOD_OF_CLASS">
+        <CrossLinks>
+          <Link TARGET="lesson_18_src_data_processor_py" TYPE="CALLS_METHOD" NAME="load_from_db"/>
+        </CrossLinks>
+      </handle_draw_METHOD>
+      <create_ui_METHOD NAME="create_ui" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Создает интерфейс Gradio.</annotation>
+      </create_ui_METHOD>
+    </UIController_CLASS>
+  </lesson_18_src_ui_controller_py>
+
+  <lesson_18_tests_conftest_py FILE="lesson_18/tests/conftest.py" TYPE="TEST_CONFIG_MODULE">
+    <keywords>Pytest, AntiLoop, SessionHooks</keywords>
+    <update_test_counter_FUNC NAME="update_test_counter" TYPE="IS_FUNCTION_OF_MODULE">
+      <annotation>Реализует Anti-Loop Protocol с прогрессивными чек-листами.</annotation>
+    </update_test_counter_FUNC>
+  </lesson_18_tests_conftest_py>
+
+  <lesson_18_tests_test_lesson_18_py FILE="lesson_18/tests/test_lesson_18.py" TYPE="TEST_SUITE_MODULE">
+    <keywords>Pytest, LDD, Checklists</keywords>
+    <test_config_manager_FUNC NAME="test_config_manager" TYPE="IS_FUNCTION_OF_MODULE">
+      <annotation>Тест ConfigManager с LDD и чек-листом путей.</annotation>
+    </test_config_manager_FUNC>
+    <test_data_processor_FUNC NAME="test_data_processor" TYPE="IS_FUNCTION_OF_MODULE">
+      <annotation>Тест DataProcessor с математической верификацией.</annotation>
+    </test_data_processor_FUNC>
+    <test_ui_controller_headless_FUNC NAME="test_ui_controller_headless" TYPE="IS_FUNCTION_OF_MODULE">
+      <annotation>Интеграционный headless тест UI.</annotation>
+    </test_ui_controller_headless_FUNC>
+  </lesson_18_tests_test_lesson_18_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link SOURCE="UIController" TARGET="ConfigManager" TYPE="DEPENDS_ON" />
+    <Link SOURCE="UIController" TARGET="DataProcessor" TYPE="DEPENDS_ON" />
+    <Link SOURCE="test_lesson_18" TARGET="conftest" TYPE="USES_PROTOCOL" NAME="Anti-Loop" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>
