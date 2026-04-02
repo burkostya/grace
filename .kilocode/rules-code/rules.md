@@ -1,124 +1,173 @@
-**Основной рабочий процесс режима "Code"**
+**Code Mode Main Workflow**
 
-Ваша главная задача в этом режиме — **исполнять**, а не планировать. Вы реализуете решения, спроектированные в режиме `Architect`, создаете инфраструктуру тестирования и обеспечиваете техническую и семантическую полноту кода.
+Your primary goal in this mode is to **execute**, not plan. You implement solutions designed in `Architect` mode, create testing infrastructure, and ensure technical and semantic completeness of the code.
 
-**Рабочий процесс пошагово:**
+**PRIMARY TASK CLASSIFICATION:**
+To ensure correct Attention mechanism operation and activation of relevant rule sections, you **MUST** explicitly output the following parameters in the console in your very first message:
+1. `"PROJECT_TYPE_DEFINED: [Lesson | Plugin System]"` (depends on whether you are in a lesson/app folder or working with a shared plugin/microservice architecture).
+2. `"TASK_TYPE_DEFINED: [Code and Tests | Tests Only]"` (depends on Orchestrator/Architect instructions).
+3. As you follow the steps below, if you encounter a `# START_SECTION_...` block and its `# TRIGGER` matches your classification, you **MUST** write to the console (logging your cognitive process): `[ROUTING] Section activated: <SECTION_NAME>`. If a trigger indicates skipping a step, write: `[ROUTING] Step <N> SKIPPED according to section <SECTION_NAME>`.
 
-*   **Шаг 0: `INITIALIZE_TODO` (Инициализация задач)**
-    *   **Цель:** Сформировать четкий план действий на основе инструкций Архитектора.
-    *   **Действия:**
-        1. Вы **ОБЯЗАНЫ** вызвать `update_todo_list` в самом первом сообщении.
-        2. Список задач должен включать такие шаги, если там их еще нет от архитектора:
-            - `[ ] STUDY_THE_PLAN: Изучить DevelopmentPlan.md и business_requirements.md`
-            - `[ ] VERIFY_ENVIRONMENT: Проверить версии библиотек через test_lib.py`
-            - `[ ] IMPLEMENT_CODE: Реализовать логику с семантической разметкой и LDD логированием`
-            - `[ ] IMPLEMENT_TESTS: Создать тесты в корневой папке tests/ с Anti-Loop Protocol (conftest.py) и выводом логов IMP:7-10`
-            - `[ ] VERIFY_TESTS: Запустить тесты и добиться 100% PASS`
-            - `[ ] FINAL_AUDIT: Провести финальный аудит логов на логические ошибки`
-            - `[ ] LAUNCHER_DESIGN: Создать/обновить надежную точку входа (run_lesson_X.py)`
-            - `[ ] UPDATE_THE_GRAPH: Обновить AppGraph.xml после успешного тестирования`
+**Step-by-step Workflow:**
 
-*   **Шаг 1: `STUDY_THE_PLAN` (Изучение артефактов)**
-    *   **Цель:** Полностью погрузиться в контекст задачи.
-    *   **Действия:**
-        1. Ваша первая обязанность — найти и изучить `DevelopmentPlan.md`, `business_requirements.md` и `requirements.txt`.
-        2. Не приступайте к написанию кода, пока не поймете архитектурный замысел и потоки данных (Data Flow).
+*   **Step 0: `INITIALIZE_TODO` (Tasks Initialization)**
+    *   **Goal:** Formulate a clear action plan based on Architect instructions.
+    *   **Actions:**
+        1. You **MUST** call `todowrite` in the very first message (after `[ROUTING]` classification).
+        2. The task list should include these steps if not already provided by the architect:
+            - `[ ] STUDY_THE_PLAN: Review DevelopmentPlan.md and business_requirements.md`
+            - `[ ] VERIFY_ENVIRONMENT: Check library versions via test_lib.py`
+            - `[ ] IMPLEMENT_CODE: Implement logic with semantic markup and LDD logging`
+            - `[ ] IMPLEMENT_TESTS: Create tests in the root tests/ folder with Anti-Loop Protocol (conftest.py) and log output IMP:7-10`
+            - `[ ] VERIFY_TESTS: Run tests and achieve 100% PASS`
+            - `[ ] FINAL_AUDIT: Perform final log audit for logical errors`
+            - `[ ] LAUNCHER_DESIGN: Create/update a reliable entry point (run_lesson_X.py)`
+            - `[ ] UPDATE_THE_GRAPH: Update AppGraph.xml after successful testing`
 
-*   **Шаг 2: `VERIFY_ENVIRONMENT` (Проверка окружения)**
-    *   **Цель:** Убедиться в корректности версий библиотек.
-    *   **Действия:**
-        1. Найдите скрипт `test_lib.py` и выполните его (`execute_command`). Если его нет — создайте и запустите для проверки версий запрошенных библиотек.
-        2. **Гипотеза о версиях:** Если вы сталкиваетесь с ошибками при использовании библиотек, которые кажутся логически верными, проверьте, не отличаются ли установленные версии от тех, на которых вы обучались. Изучите существующий код в проекте, чтобы понять, как ими пользоваться. Если примеров нет — **ОБЯЗАТЕЛЬНО** запросите актуальные сниппеты через MCP сервер `Context7`.
-        3.  **Приоритет надежным библиотекам**. Ваше обучение было особенно тщательным на библиотеках, которые используются для внутренних калькуляторов LLM для их собственных вычислений. Поскольку у вас проводилась дополнительная тренировка на этих библиотеках по миллионам чатов пользователей, то они исключительно надежны для генерации кода с LLM и следует отдавать им приоритет при генерации кода. Высоконадежные библиотеки: math, random, statistics, decimal, datetime, time, re, os, sys, csv, json, sqlite3, xml.etree.ElementTree, configparser, pickle, base64, hashlib, collections, itertools, functools, logging, argparse, typing, uuid, zipfile, tarfile, gzip, zlib, shutil, tempfile, numpy, pandas, scipy, sklearn, matplotlib, seaborn, h5py, openpyxl, requests, lxml, PIL, reportlab, sympy, dateutil, pytz.
+*   **Step 1: `STUDY_THE_PLAN` (Artifact Review)**
+    *   **Goal:** Fully immerse yourself in the task context.
+    *   **Actions:**
+        1. Your first duty is to find and study `DevelopmentPlan.md`, `business_requirements.md`, and `requirements.txt`. (Note: in plugin architecture, these files may have a module prefix and reside in the `plans/` folder, e.g., `plans/import_csv_req.md`). Use `read` to study files.
+        2. Do not start writing code until you understand the architectural design and Data Flow.
 
+*   **Step 2: `VERIFY_ENVIRONMENT` (Environment Check)**
+    *   **Goal:** Ensure library versions are correct.
+    *   **Actions:**
+        1. Find the `test_lib.py` script and execute it (`bash`). If it doesn't exist, create and run it to check versions of requested libraries.
+        2. **Version Hypothesis:** If you encounter errors using libraries that seem logically correct, check if the installed versions differ from those you were trained on. Study existing code in the project to understand how to use them. If no examples are available, **MUST** request up-to-date snippets via the `Context7` MCP server.
+        3. **Priority to Reliable Libraries.** Your training was particularly thorough on libraries used for internal LLM calculators. These high-reliability libraries should be prioritized: math, random, statistics, decimal, datetime, time, re, os, sys, csv, json, sqlite3, xml.etree.ElementTree, configparser, pickle, base64, hashlib, collections, itertools, functools, logging, argparse, typing, uuid, zipfile, tarfile, gzip, zlib, shutil, tempfile, numpy, pandas, scipy, sklearn, matplotlib, seaborn, h5py, openpyxl, requests, lxml, PIL, reportlab, sympy, dateutil, pytz.
 
-*   **Шаг 3: `IMPLEMENT_THE_CODE` (Реализация и Семантическая Инкапсуляция)**
-    *   **Цель:** Написать рабочий код, который сможет в будущем поддерживать другой изолированный ИИ-агент.
-    *   **Принципы Генерации и SFT-корреляция:**
-        1.  **SFT-Прайминг (Docstrings):** Помните, что на этапе SFT вас обучали генерировать код функций напрямую из docstrings. Для активации наиболее надежных весов генерации вы **ОБЯЗАНЫ** сначала написать развернутый docstring (минимум 1 абзац), описывающий логику, и только потом приступать к коду.
-        2.  **Keywords & Patterns:** Использование `KEYWORDS` (например, `PATTERN(X): Singleton`) также является SFT-паттерном. Корректная классификация задачи значительно повышает качество генерации.
-        3.  **Устранение конфликтов разметки:** Если вы сталкиваетесь с тем, что код генерируется с синтаксическими ошибками (особенно в отступах), это может быть вызвано конфликтом парных тегов с паттернами обучения из SFT (особенно актуально для моделей семейства **GLM**). В этом случае **попробуйте временно убрать парные теги внутри тела функции** для обеспечения совместимости с SFT-паттернами чистого кода.
-        4.  **Критерий сегментации:** Для простых алгоритмов (Complexity <= 7) можно не разделять код на блоки внутри функции комментариями. Это снижает риск ошибок генерации по SFT-паттернам, разрешается оставлять START-END теги на уровне функции. В тоже время, для сложных алгоритмов (Complexity > 7) используйте сегментацию, т.к. это улучшает в attention связь контекстов лога и кода в единое целое на уровне шагов алгоритма. 
-        5.  **Выживание без контекста (Zero-Context Survival):** Используйте секции `CONTRACT`, `KEYWORDS` и `RATIONALE`. Агент, который придет чинить ваш код, будет видеть только сам файл. Поэтому вы генерируете эти описания не только для улучшения срабатывания SFT-паттернов, но и для того, чтобы ваш код мог быть понят другим агентом без документации.
-        6.  **Семантический Экзоскелет (XML-DOM):** Оборачивайте логические узлы в парные теги `# START_BLOCK...` / `# END_BLOCK...`.
-        7.  **Log Driven Development (LDD):** Используйте строгий формат логирования `[IMP:1-10]`. Фиксируйте "AI Belief State" на уровне `IMP:9-10`.
+*   **Step 3: `IMPLEMENT_THE_CODE` (Implementation and Semantic Encapsulation)**
+    
+    # START_SECTION_SKIP_LOGIC
+    # TRIGGER: TASK_TYPE_DEFINED: Tests Only
+    Step 3 is SKIPPED. You proceed directly to Step 4 for testing existing code.
+    # END_SECTION_SKIP_LOGIC
 
-*   **Шаг 4: `IMPLEMENT_TESTS` (Инфраструктура Тестирования и Телеметрия)**
-    *   **Цель:** Создать тесты, генерирующие контекст для фиксов и предотвращающие зацикливание агентов.
-    *   **Действия:**
-        1.  **Бэкенд и Выборка Логов (LDD Telemetry):** Напишите `pytest` тесты в корневой папке `tests/`. Тестирование должно производиться нативным импортом (Native Pytest). **КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО** использовать `subprocess.run` для тестирования бизнес-логики и пайплайнов. Тесты обязаны включать вывод на консоль не только результатов тестов, но и селекцию самых важных строк лога через уровни `[IMP:7-10]`. Это покажет вам и будущему агенту обязательный для ознакомления контекст для верификации траектории работы алгоритма. **Для обеспечения вывода логов в консоль при запуске pytest используйте явную печать (print) отфильтрованных строк лога или настройку caplog с выводом в stdout.** Если вы видите, что после запуска тестов обязательный вывод важных фрагментов лога не сработал, то это серьезная ошибка разработки теста и исправьте ее. Вы ОБЯЗАНЫ осознавать, что успешное прохождение автотеста (100% PASSED) НЕ ЯВЛЯЕТСЯ финальным доказательством корректности. Это может быть результатом логической подгонки. Истинным критерием успеха является Семантическая Верификация Трассы — соответствие сгенерированных логов контрактам функций и ожидаемому поведению. Важной эвристикой тут является "принудительное чтение" важных строчек лога всеми агентами, что не позволяет им уклонится от изучения важного контекста.
-        2.  **Правило "Zero Hardcode" и `tmp_path`:** Запрещено использование жестких относительных или абсолютных путей (например, `TEST_DB_PATH = "lesson_1/db.sqlite"`) и хаков с `sys.path.append`. Всегда используйте встроенную фикстуру `tmp_path` для создания любых тестовых файлов (БД, CSV, JSON). Тесты не должны мутировать реальные файлы проекта. Запрещена ручная очистка файлов (типа `os.remove`) — полагайтесь на автоматическую очистку временных директорий самим `pytest`.
-        3.  **Защита от зацикливания (Anti-Loop Protocol):** При создании или модификации тестов вы **ОБЯЗАНЫ** внедрить механизм отслеживания попыток.
-            *   **Счетчик попыток:** Используйте файл `.test_counter.json` или аналогичный механизм для хранения количества неудачных запусков. Счетчик сбрасывается в 0 только при 100% PASS. При очередном запуске теста должно выводится на консоль сколько попыток уже было сделано.
-            *   **КРИТИЧЕСКОЕ ПРАВИЛО ВЫВОДА:** Вы **ОБЯЗАНЫ** реализовать вывод чеклиста и статуса попыток так, чтобы он срабатывал **ПРИ КАЖДОМ** запуске теста, если счетчик попыток больше 0. Если вы используете `pytest` используйте методы для гарантированного вывода в консоль.
-            *   **АРХИТЕКТУРА ТЕСТА (Anti-Loop Safety):**
-                - **ЗАПРЕЩЕНО** вызывать `update_test_counter(False)` (инкремент) внутри самих файлов тестов, если вы используете хуки сессии.
-                - **conftest.py:** Логика хуков сессии (`pytest_sessionstart`, `pytest_sessionfinish`) и управление счетчиком должны быть вынесены в файл `tests/conftest.py`. В самих файлах `test_*.py` должна оставаться только бизнес-логика и LDD-проверки.
-                - **ПРИОРИТЕТ ВЫЗОВА:** Всегда запускайте тесты через `python -m pytest [путь_к_тесту] -s -v`. Флаг `-s` критически важен для обхода буферизации и мгновенного отображения Anti-Loop сообщений и LDD-логов. Флаг `-v` обеспечивает видимость статуса каждого теста (PASSED/FAILED), что предотвращает "ослепление" агента при пустом выводе.
-            *   **Попытка 1-2 (Checklist):** При неудаче тест должен вывести в консоль `CHECKLIST` типовых ошибок:
-                - Проверка путей и использование `tmp_path`.
-                - Проверка импортов (Native Import vs Subprocess).
-                - Соответствие версий библиотек через `test_lib.py`.
-                - Наличие необходимых файлов данных/конфигов.
-                **Накопительный опыт (Experience Feedback Loop):** Вы **ОБЯЗАНЫ** дополнять `CHECKLIST` в коде тестов новыми пунктами на основе каждой встреченной ошибки. Если тест упал по новой причине (например, неверный `cwd` или отсутствие `PYTHONPATH`), добавьте соответствующую проверку в вывод теста. Это создает "базу знаний" внутри самого теста, позволяя следующему агенту мгновенно увидеть решение из предыдущего опыта.
-            *   **Попытка 3 (External Help):** Тест выводит рекомендацию: "Используйте MCP `tavily` или `Context 7` для поиска решения проблемы в Интернете".
-            *   **Попытка 4 (Reflection):** Тест выводит предупреждение: "ВНИМАНИЕ: Риск зацикливания! Сделайте паузу и проведите рефлексию. Не используете ли вы одну и ту же ошибочную стратегию? Рассмотрите альтернативные варианты решения (Суперпозиция)".
-            *   **Попытка 5+ (Escalation):** Тест выводит сообщение: "КРИТИЧЕСКАЯ ОШИБКА: Обнаружено зацикливание агента. ОСТАНОВИТЕСЬ. Вы не можете решить проблему самостоятельно. Сформируйте запрос на помощь оператору или другому ИИ-агенту. Запрос должен содержать: 1) Описание проблемы, 2) Предпринятые шаги, 3) Выдержки из логов последних попыток, 4) План консультации (что именно вам нужно объяснить)".
-        4.  **UI (Headless-тестирование):** Эмуляция вызовов контроллеров без запуска сервера.
-        5.  **Обязательность семантической разметки в тестах**. В тестах действую такие правила полной семантической разметки для функций кода, как и для основного кода. Единнобразие оформления улучшает устойчивость твоей генерации.
-        6.  **Атомарность тестов**. Хорошей практикой является создание более атомарных тестов для тестирования отдельных функциональных элементов, т.к. это дает вам более качественный контекст для отладки.
-        7.  **Интегрирующий тест**.Кроме атомарных тестов желательно иметь и тест полного прохода сценария работы модуля для проверки отсутствия конфликтов на последовательнях срабатывания фукций и ошибках на связей модулей между собой.
-        8.  **One-Shot Пример правильного теста (LDD + Anti-Loop):**
+    # START_SECTION_WRITE_CODE
+    # TRIGGER: TASK_TYPE_DEFINED: Code and Tests
+    *   **Goal:** Write working code that can be maintained by another isolated AI agent in the future.
+    *   **Generation Principles and SFT Correlation:**
+        1. **SFT Priming (Docstrings):** Remember that during SFT, you were trained to generate function code directly from docstrings. To activate the most reliable weights, you **MUST** first write a detailed docstring (at least 1 paragraph) describing the logic, and only then proceed to code.
+        2. **Keywords & Patterns:** Using `KEYWORDS` (e.g., `PATTERN(X): Singleton`) is also an SFT pattern. Correct task classification significantly improves generation quality.
+        3. **Resolving Markup Conflicts:** If code generation results in syntax errors (especially indentation), it might be due to paired tag conflicts with SFT patterns. In this case, **try temporarily removing paired tags inside the function body** to ensure compatibility with clean code SFT patterns.
+        4. **Segmentation Criterion:** For simple algorithms (Complexity <= 7), you can omit block-level comments inside the function. For complex algorithms (Complexity > 7), use segmentation to improve attention correlation between logs and code steps.
+        5. **Zero-Context Survival:** Use `CONTRACT`, `KEYWORDS`, and `RATIONALE` sections. An agent coming to fix your code will only see the file itself.
+        6. **Semantic Exoskeleton (XML-DOM):** Wrap logical nodes in paired tags `# START_BLOCK...` / `# END_BLOCK...`.
+        7. **Log Driven Development (LDD):** Use strict log format `[IMP:1-10]`. Record "AI Belief State" at `[IMP:9-10]`.
+        8. **Semantic Distillation:** Markdown plans are CoT (Chain of Thought). You **MUST** extract business requirements from `.md` files and transfer them to `# START_CONTRACT` and `# START_RATIONALE` tags directly in the code.
+    # END_SECTION_WRITE_CODE
+
+*   **Step 4: `IMPLEMENT_TESTS` (Testing Infrastructure and Telemetry)**
+    *   **Goal:** Create tests that generate context for fixes and prevent agent looping.
+    *   **Actions (Common for all modes):**
+        1. **Backend and Log Selection (LDD Telemetry):** Write `pytest` tests in the root `tests/` folder. Use native imports. **STRICTLY FORBIDDEN** to use `subprocess.run` for business logic testing. Tests MUST include console output of results and selection of critical log lines via `[IMP:7-10]`. **To ensure log output to console, use explicit print statements for filtered logs or configure caplog output to stdout.** 100% PASSED is not final proof; the true criterion is Semantic Trace Verification.
+        2. **Zero Hardcode Rule and `tmp_path`:** Forbidden to use hardcoded paths or `sys.path.append`. Always use the built-in `tmp_path` fixture for all test files.
+        3. **Anti-Loop Protocol:** When creating/modifying tests, you **MUST** implement an attempt tracking mechanism.
+            *   **Attempt Counter:** Use `.test_counter.json` to store failed run counts. Counter resets to 0 only at 100% PASS.
+            *   **CRITICAL OUTPUT RULE:** You **MUST** output a checklist and attempt status **EVERY TIME** the test runs if the attempt counter > 0.
+            *   **TEST ARCHITECTURE (Anti-Loop Safety):**
+                - **FORBIDDEN** to call `update_test_counter(False)` (increment) inside test files if using session hooks.
+                - **conftest.py:** Session hook logic (`pytest_sessionstart`, `pytest_sessionfinish`) and counter management must be in `tests/conftest.py`.
+                - **PRIORITY CALL:** Always run tests via `python -m pytest [test_path] -s -v`.
+            *   **Attempt 1-2 (Checklist):** On failure, output a `CHECKLIST` of common errors.
+                **Experience Feedback Loop:** You **MUST** add new items to the `CHECKLIST` based on encountered errors.
+            *   **Attempt 3 (External Help):** Output: "Use MCP `tavily` or `Context 7` to find a solution online."
+            *   **Attempt 4 (Reflection):** Output: "WARNING: Looping risk! Pause and reflect. Are you repeating a failed strategy? Consider alternatives (Superposition)."
+            *   **Attempt 5+ (Escalation):** Output: "CRITICAL ERROR: Agent looping detected. STOP. Formulate a help request for an operator."
+        4. **UI (Headless Testing):** Emulate controller calls without starting the server.
+        5. **Mandatory Semantic Markup in Tests.** Same rules as main code.
+        6. **Test Atomicity.** Create atomic tests for individual functional elements.
+        7. **Integration Test.** Also have a full-scenario pass test.
+        8. **One-Shot Example (LDD + Anti-Loop):**
             ```python
             # START_FUNCTION_test_backend_logic
             # START_CONTRACT:
-            # PURPOSE: Проверка расчета функции и верификация реальных логов (LDD).
+            # PURPOSE: Verify business logic and LDD trace trajectory.
             # INPUTS: caplog (pytest fixture)
-            # KEYWORDS: [PATTERN(7): LDD; CONCEPT(8): Telemetry]
-            # LINKS: [USES_API(9): trig_logic.calculate_trig]
+            # KEYWORDS:[PATTERN(7): LDD; CONCEPT(8): Telemetry]
             # COMPLEXITY_SCORE: 5
             # END_CONTRACT
             def test_backend_logic(caplog):
                 """
-                Тест проверяет не только результат функции, но и наличие
-                соответствующих записей в логах с нужным уровнем важности (IMP).
+                Test verifies not just the function result, but the presence of 
+                corresponding log entries with correct importance levels (IMP).
                 """
-                # START_BLOCK_EXECUTION: [Вызов бизнес-логики]
-                df = calculate_trig(A=2.0, B=1.0, C=0.0, D=0.0, x_min=-2, x_max=2)
-                assert not df.empty
+                # IMPORTANT: Set log capture level
+                caplog.set_level("INFO")
+                
+                # START_BLOCK_EXECUTION:[Call business logic]
+                df = calculate_trig(A=2.0, B=1.0, x_min=-2, x_max=2)
                 # END_BLOCK_EXECUTION
 
-                # START_BLOCK_LDD_VERIFICATION: [Проверка реальных логов через caplog]
-                # Обязательная инъекция логов уровней [IMP:7-10] для верификации траектории.
+                # START_BLOCK_LDD_TELEMETRY: [Output trajectory slice for agent]
+                # IMPORTANT: Printing logs [IMP:7-10] is done BEFORE business asserts 
+                # so that on failure, the agent still sees the algorithm trajectory.
                 found_log = False
-                print("\n--- LDD TELEMETRY (IMP:7-10) ---")
+                print("\n--- LDD TRAJECTORY (IMP:7-10) ---")
                 for record in caplog.records:
-                    if any(f"[IMP:{i}]" in record.message for i in range(7, 11)):
-                        print(record.message)
-                        if "[IMP:9]" in record.message and "calculate_trig" in record.message:
-                            found_log = True
+                    if "[IMP:" in record.message:
+                        try:
+                            imp_level = int(record.message.split("[IMP:")[1].split("]")[0])
+                            if imp_level >= 7:
+                                print(record.message)
+                            if imp_level >= 9 and "calculate_trig" in record.message:
+                                found_log = True
+                        except (IndexError, ValueError):
+                            continue
+                # END_BLOCK_LDD_TELEMETRY
+
+                # START_BLOCK_VERIFICATION:[Business checks and anti-illusion]
+                assert not df.empty, "Error: Business logic returned empty result"
                 
-                # Защита от Иллюзий: 100% PASSED без чтения логов [IMP:9] считается провалом.
-                assert found_log, "Критическая ошибка LDD: Бизнес-логика не выдала контрольную запись в лог [IMP:9]-calculate_trig"
-                # END_BLOCK_LDD_VERIFICATION
+                # Anti-Illusion: 100% PASSED without reading [IMP:9] logs is a failure.
+                assert found_log, "Critical LDD Error: Business logic failed to output control log [IMP:9]-calculate_trig"
+                # END_BLOCK_VERIFICATION
             # END_FUNCTION_test_backend_logic
             ```
 
-*   **Шаг 5: `CHECK_LOG` (Финальный аудит лога)**
-    *   **Цель:** Проверить по логу не было ли логических ошибок в работе системы, которую не смогли выявить тесты.
-    *   **Действия:** Считайте лог целиком и сделайте заключение корректно ли работает приложение. Если какие-то ошибки пропустили тесты, то доработайте их и пройдите процедуру тестирования заново.
+    # START_SECTION_LESSON_TESTS
+    # TRIGGER: PROJECT_TYPE_DEFINED: Lesson
+    In simple lessons, it is allowed to create a test DB and schema (CREATE TABLE) directly inside the test using `tmp_path`.
+    # END_SECTION_LESSON_TESTS
 
-*   **Шаг 5.1: `LAUNCHER_DESIGN` (Паттерны надежного запуска)**
-    *   **Цель:** Создать точку входа (например, run_lesson_X.py), устойчивую к проблемам окружения и IDE.
-    *   **Действия:**
-        1. **Отложенный импорт (Lazy Import):** Импортируйте тяжелые библиотеки (gradio, numpy, plotly) и внутренние модули проекта *внутри* функции `main()`. Это предотвращает сбои при инициализации, если окружение еще не полностью готово.
-        2. **Обработка прерываний:** Оборачивайте запуск сервера в `try-except KeyboardInterrupt`, чтобы корректно завершать работу при остановке из IDE.
-        3. **Интерактивность:** Для Gradio всегда устанавливайте `inbrowser=True` в `ui.launch()`.
-        4. **Дублирование логов:** Настраивайте `logging` так, чтобы критические сообщения выводились и в файл, и в `stdout` (StreamHandler) для видимости в терминале IDE.
+    # START_SECTION_PLUGIN_TESTS
+    # TRIGGER: PROJECT_TYPE_DEFINED: Plugin System
+    For integration projects, follow SWE practices:
+    - **Read-Only vs Ephemeral Data:** Put reference files in `tests/test_data/`. Create isolated DBs via plugin calls (e.g., `init_db(tmp_path)`).
+    - **Dependency Injection (DI) > Mocks:** Avoid `unittest.mock.patch` for internal state. Pass paths explicitly.
+    - **Invariant Testing (ETL):** Verify logical invariants.
+    - **SWE Heuristics:** Isolate parsing logic. Test with static Data-Driven Fixtures.
+    # END_SECTION_PLUGIN_TESTS
 
-*   **Шаг 6: `UPDATE_THE_GRAPH` (Финализация Архитектурной Карты)**
-    *   **Цель:** Поддерживать `AppGraph.xml` в актуальном состоянии.
-    *   **КРИТИЧЕСКОЕ ПРАВИЛО:** Обновление `AppGraph.xml` — это строго финальный шаг после прохождения всех тестов. Графы могут быть локальными в папке с модулями и глобальными в корне проекта. Руководствуйтесь инструкциями от пользователя какой граф нужен. Инструкции по генерации графа находятся в файле `.kilocode\rules-code\graph_generation_prompt.md`.
+*   **Step 5: `CHECK_LOG` (Final Log Audit)**
+    *   **Goal:** Check the log for logical errors that tests might have missed.
+    *   **Actions:** Read the entire log and conclude if the app works correctly.
 
-*   **Работа с Данными (ETL):**
-    *   При работе с данными в SQL базе оцени есть в текущей задачи сложные алгоритмы транформации. Крупные SQL-запросы со множеством JOIN для тебя могут быть сложными, т.е. представляют black box, где ты не сможешь понять почему внутри него происходят фантомные выпадения строк и т.п. Решением является разбиение манипуляций на несколько шагов через применение временных таблиц, а также использование Pandas, на который ты крайне растренирован, в интеграции с SQL-базой. Если у тебя сложные манипуляции с данными или ты столкнулся с трудными ошибками, используй эвристики из `.kilocode/rules-architect/data_transformation_guide.md`.
+*   **Step 5.1: `LAUNCHER_DESIGN` (Reliable Launch Patterns)**
+    
+    # START_SECTION_LAUNCHER
+    # TRIGGER: PROJECT_TYPE_DEFINED: Lesson
+    *   **Goal:** Create an entry point (e.g., run_lesson_X.py) resistant to environment issues.
+    *   **Actions:**
+        1. **Lazy Import:** Import heavy libraries (gradio, numpy) inside `main()`.
+        2. **Interrupt Handling:** Wrap server start in `try-except KeyboardInterrupt`.
+        3. **Interactivity:** Set `inbrowser=True` in `ui.launch()`.
+        4. **Log Duplication:** Configure `logging` to output to both file and `stdout`.
+    # END_SECTION_LAUNCHER
+
+    # START_SECTION_SKIP_LAUNCHER
+    # TRIGGER: PROJECT_TYPE_DEFINED: Plugin System
+    Step `LAUNCHER_DESIGN` is SKIPPED. Isolated plugins don't need their own entry point.
+    # END_SECTION_SKIP_LAUNCHER
+
+*   **Step 5: `PREPARE_TEST_GUIDE` (QA Artifact)**
+    *   **Goal:** Prepare a semantic bridge for an independent QA tester.
+    *   **Actions:**
+        1. Create `tests/test_guide.md`.
+        2. Describe required input data, SQL queries for verification, and expected `[IMP:9-10]` log markers.
+
+*   **Step 6: `UPDATE_THE_GRAPH` (Finalize Architectural Map)**
+    *   **Goal:** Keep `AppGraph.xml` up to date.
+    *   **CRITICAL RULE:** Updating `AppGraph.xml` is strictly the final step after passing all tests.
+

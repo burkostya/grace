@@ -25,12 +25,10 @@ lesson_X/
 ├── handlers.py         # Чистые Python-функции бизнес-логики (БЕЗ импорта dash)
 ├── config_manager.py   # Работа с config.json
 ├── db_manager.py       # Работа с SQLite
-├── cli.py              # CLI интерфейс
 ├── config.json         # Параметры
 ├── parabola.db         # SQLite база
 └── tests/
     ├── test_handlers.py    # Headless-тесты чистой логики
-    ├── test_cli.py         # CLI smoke-тесты
     └── test_callbacks.py   # Тесты callback-функций (без сервера)
 ```
 
@@ -176,13 +174,6 @@ def on_draw(n_clicks, table_data):
     return build_comparison_figure(table_data)
 ```
 
-### 4. CLI Интерфейс (Agentic UX)
-Для обеспечения автономного управления бэкендом, создайте отдельную точку входа `cli.py` (с использованием `argparse`). CLI должен поддерживать минимум две команды:
-*   `generate`: Выполняет генерацию точек в БД, автоматически считывая параметры `a, c, x_min, x_max` из `config.json` (без необходимости вводить их в терминале).
-*   `export-csv --out <filename>`: Считывает текущие данные из БД SQLite и сохраняет их в указанный CSV-файл.
-
-CLI использует те же функции из `handlers.py`, что и UI.
-
 ## Требования к разработке и архитектуре
 1.  **Соблюдение фреймворка промптов:** Весь код должен быть обернут в "Семантический Экзоскелет" (теги `START_BLOCK`, `MODULE_CONTRACT` и т.д.). Контракты должны быть написаны в парадигме "Zero-Context Survival" для будущих агентов. Если фреймворк тебе с этими понятиями не доступен, то останови работу и сообщи пользователю об ошибке настройки агентской среды.
 2.  **Логирование (LDD 2.0):** Логи пишутся в изолированный файл `lesson_X/app_X.log`. Строго использовать шкалу `[IMP:1-10]` и фиксировать "AI Belief State" в критических точках алгоритма.
@@ -237,10 +228,7 @@ class TestGraphBuilding:
         assert fig.data[1].y[0] == 99  # Edited кривая
 ```
 
-### 2. CLI Smoke Test (`test_cli.py`)
-Изолированный тест для `cli.py` через `subprocess.run`. Убедитесь, что команды `generate` и `export-csv` возвращают `exit code 0` и корректно пишут в `stdout`/файл.
-
-### 3. Callback Integration Test (`test_callbacks.py`)
+### 2. Callback Integration Test (`test_callbacks.py`)
 Тест callback-функций **вызывая их как обычные Python-функции** (без сервера):
 
 ```python

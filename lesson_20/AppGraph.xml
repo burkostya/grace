@@ -1,0 +1,82 @@
+<KnowledgeGraph>
+  <Lesson_20_Info TYPE="PROJECT_INFO">
+    <keywords>Parabola, Gradio, SQLite, LDD, Education</keywords>
+    <terms>y = ax^2 + c, Headless Testing, Semantic Exoskeleton</terms>
+    <annotation>Учебный проект для генерации и визуализации параболы с использованием Gradio и SQLite.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="Generate Parabola">Пользователь вводит параметры, система рассчитывает 100 точек, сохраняет их в БД и отображает в таблице.</Scenario>
+      <Scenario NAME="Visualize Parabola">Система загружает точки из БД и строит интерактивный график Plotly.</Scenario>
+    </BusinessScenarios>
+  </Lesson_20_Info>
+
+  <config_manager_py FILE="lesson_20/config_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>JSON, Config, State</keywords>
+    <load_config_FUNC NAME="load_config" TYPE="FUNCTION">
+      <annotation>Загружает параметры a, c, x_min, x_max из JSON.</annotation>
+    </load_config_FUNC>
+    <save_config_FUNC NAME="save_config" TYPE="FUNCTION">
+      <annotation>Сохраняет параметры в JSON.</annotation>
+    </save_config_FUNC>
+  </config_manager_py>
+
+  <db_manager_py FILE="lesson_20/db_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>SQLite, Persistence, SQL</keywords>
+    <init_db_FUNC NAME="init_db" TYPE="FUNCTION">
+      <annotation>Создает таблицу points.</annotation>
+    </init_db_FUNC>
+    <save_points_FUNC NAME="save_points" TYPE="FUNCTION">
+      <annotation>Сохраняет список точек (x, y) в БД.</annotation>
+    </save_points_FUNC>
+    <get_points_FUNC NAME="get_points" TYPE="FUNCTION">
+      <annotation>Загружает все точки из БД.</annotation>
+    </get_points_FUNC>
+  </db_manager_py>
+
+  <logic_py FILE="lesson_20/logic.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>Math, Parabola, Calculation</keywords>
+    <calculate_parabola_FUNC NAME="calculate_parabola" TYPE="FUNCTION">
+      <annotation>Рассчитывает 100 точек y = ax^2 + c.</annotation>
+    </calculate_parabola_FUNC>
+  </logic_py>
+
+  <handlers_py FILE="lesson_20/handlers.py" TYPE="IS_METHOD_OF_CLASS">
+    <keywords>UI, Controller, Gradio, Plotly</keywords>
+    <handle_generate_FUNC NAME="handle_generate" TYPE="FUNCTION">
+      <annotation>Координирует сохранение конфига, расчет и запись в БД.</annotation>
+      <CrossLinks>
+        <Link TARGET="config_manager_py_save_config_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="logic_py_calculate_parabola_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="db_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_generate_FUNC>
+    <handle_draw_FUNC NAME="handle_draw" TYPE="FUNCTION">
+      <annotation>Загружает данные и строит график.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_py_get_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_draw_FUNC>
+  </handlers_py>
+
+  <app_py FILE="lesson_20/app.py" TYPE="UI_MODULE">
+    <annotation>Определяет интерфейс Gradio Blocks.</annotation>
+    <create_app_FUNC NAME="create_app" TYPE="FUNCTION">
+      <CrossLinks>
+        <Link TARGET="handlers_py_handle_generate_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="handlers_py_handle_draw_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </create_app_FUNC>
+  </app_py>
+
+  <run_lesson_20_py FILE="run_lesson_20.py" TYPE="ENTRY_POINT">
+    <annotation>Точка входа: настройка LDD логирования и запуск сервера.</annotation>
+    <CrossLinks>
+      <Link TARGET="db_manager_py_init_db_FUNC" TYPE="CALLS_FUNCTION" />
+      <Link TARGET="app_py_create_app_FUNC" TYPE="CALLS_FUNCTION" />
+    </CrossLinks>
+  </run_lesson_20_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link TARGET="run_lesson_20_py" TYPE="ORCHESTRATES_STARTUP" />
+    <Link TARGET="handlers_py" TYPE="MEDIATES_UI_AND_LOGIC" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>

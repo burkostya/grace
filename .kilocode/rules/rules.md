@@ -69,23 +69,12 @@ START_NAVIGATION_AND_ANALYSIS
 *   **Путь 2: От Лога к Коду.** Имея лог с `[BLOCK_NAME]`, используйте `search_files` по `FunctionName` и `BLOCK_NAME` для мгновенного перехода к эпицентру.
 *   **Путь 3: Семантический Поиск.** При использовании `codebase_search` формулируйте запросы как плотный набор терминов, а не предложений (например: "UserSession Redis auth login KEYWORDS", а не "где происходит логин").
 
-**2. Инструменты модификации и безопасность (`apply_diff`)**
-Для точечных правок используйте `apply_diff`. 
-*   **КРИТИЧЕСКОЕ ПРАВИЛО ФОРМАТИРОВАНИЯ:** Параметр `diff` должен начинаться **мгновенно** с маркера `<<<<<<< SEARCH` без единого пробела или переноса строки перед ним.
+**2. Инструменты модификации и безопасность (`edit`)**
+Для точечных правок используйте инструмент `edit`. 
 
-### Правильный шаблон вызова (XML-стиль):
-<apply_diff>
-<path>путь/к/файлу.py</path>
-<diff><<<<<<< SEARCH
-# START_FUNCTION_MyFunction[старый_код, полученный из read_file]
-# END_FUNCTION_MyFunction
-=======
-# START_FUNCTION_MyFunction[новый_код]
-# END_FUNCTION_MyFunction
->>>>>>> REPLACE</diff>
-</apply_diff>
-
-*   **Атомарность и защита от галлюцинаций Positional Encoding:** Из-за особенностей позиционного кодирования вы склонны галлюцинировать абсолютные номера строк. **Никогда** не пытайтесь заменить блок, опираясь на предполагаемые номера строк. Блок `SEARCH` **ОБЯЗАН** начинаться с уникального открывающего якоря (например, `# START_BLOCK...`) и заканчиваться закрывающим. Обязательно используйте `read_file` перед патчем, чтобы получить точный текст между якорями.
+*   **Принцип работы:** Инструмент выполняет точную замену фрагмента текста (`oldString`) на новый (`newString`). 
+*   **Правило "Чтения перед правкой":** Вы ОБЯЗАНЫ вызвать `read` для файла перед использованием `edit`, чтобы получить точный текст и отступы.
+*   **Использование якорей:** При возникновении ошибок (например, множественные совпадения `oldString`), рекомендуется расширять область поиска, включая в `oldString` уникальные семантические якоря `# START_BLOCK` / `# END_BLOCK`.
 *   **Правило "Шрама на коде":** При исправлении сложного бага внутри блока, добавьте строку `# BUG_FIX_CONTEXT: [почему старый подход не работал и выбран этот]`, чтобы предотвратить зацикливание роя агентов в будущем.
 
 **3. Поддержание консистентности разметки**
@@ -95,116 +84,116 @@ END_NAVIGATION_AND_ANALYSIS
 
 $START_MODIFICATION_AND_GENERATION
 
-=== АБСТРАКТНЫЙ СЕМАНТИЧЕСКИЙ ШАБЛОН ===
-(Используйте этот шаблон как структуру для генерации новых файлов. В квадратных скобках указаны инструкции для заполнения.)
+=== ABSTRACT SEMANTIC TEMPLATE ===
+(Use this template as a structure for generating new files. Instructions in square brackets.)
 
-# FILE:[путь/к/файлу/от/корня/проекта.py]
-# VERSION:[Версия файла, например, 1.0.0]
+# FILE:[path/to/file/from/project/root.py]
+# VERSION:[File version, e.g., 1.0.0]
 # START_MODULE_CONTRACT:
-# PURPOSE:[Краткое описание основной ответственности модуля на русском.]
-# SCOPE: [Основные функциональные области.]
-# INPUT:[Входные данные модуля в целом.]
-# OUTPUT: [Что модуль предоставляет остальной системе.]
+# PURPOSE:[Brief description of the module's primary responsibility in English.]
+# SCOPE: [Main functional areas.]
+# INPUT:[Module-wide input data.]
+# OUTPUT: [What the module provides to the rest of the system.]
 # KEYWORDS:[DOMAIN(X): ...; CONCEPT(Y): ...; TECH(Z): ...]
 # LINKS:[USES_API(X): ...; READS_DATA_FROM(Y): ...]
-# LINKS_TO_SPECIFICATION:[пункты ТЗ, если применимо]
+# LINKS_TO_SPECIFICATION:[Technical requirements points, if applicable]
 # END_MODULE_CONTRACT
 #
-# START_INVARIANTS: (ОПЦИОНАЛЬНО - только для сложных модулей со стейтом)
-# [Описание жестких гарантий состояния, которые предоставляет модуль.]
-# -[Условие/Состояние 1]
+# START_INVARIANTS: (OPTIONAL - only for complex stateful modules)
+# [Description of hard state guarantees provided by the module.]
+# -[Condition/State 1]
 # END_INVARIANTS
 #
-# START_RATIONALE: (ОПЦИОНАЛЬНО, но обычно рекомендует применять за исключением самых простых модулей)
-#[Формат Q&A для объяснения ИИ, ПОЧЕМУ код написан именно так (защита от неверного рефакторинга).]
-# Q: [Почему реализовано именно так?]
-# A: [Обоснование решения, ограничения среды.]
+# START_RATIONALE: (OPTIONAL, but highly recommended for all but the simplest modules)
+#[Q&A format for explaining WHY the code was written this way to AI (protection against incorrect refactoring).]
+# Q: [Why was it implemented this way?]
+# A: [Justification, environmental constraints.]
 # END_RATIONALE
 #
-# START_CHANGE_SUMMARY: (ОБЯЗАТЕЛЬНО)
-#[Накопительный итог изменений модуля для контекста роя агентов.]
-# LAST_CHANGE: [Текущая версия - Краткое описание последних изменений]
-# PREV_CHANGE_SUMMARY:[Предыдущая версия - Описание]
+# START_CHANGE_SUMMARY: (MANDATORY)
+#[Cumulative summary of module changes for agent swarm context.]
+# LAST_CHANGE: [Current version - Brief description of latest changes]
+# PREV_CHANGE_SUMMARY:[Previous version - Description]
 # END_CHANGE_SUMMARY
 #
 # START_MODULE_MAP:
-# (Формат: ТИП [Вес 1-10][Описание на русском] =>[имя_сущности_латиницей])
-# FUNC/CLASS[Вес][Описание сущности] => [Имя]
+# (Format: TYPE [Weight 1-10][Entity description in English] =>[entity_name_latin])
+# FUNC/CLASS[Weight][Entity description] => [Name]
 # END_MODULE_MAP
 #
-# START_USE_CASES: (Нотация AAG: Actor -> Action -> Goal)
-# - [Имя сущности]:[Кто действует] -> [Что делает] -> [Какой бизнес-результат]
+# START_USE_CASES: (AAG Notation: Actor -> Action -> Goal)
+# - [Entity Name]:[Who acts] -> [What they do] -> [What business result is achieved]
 # END_USE_CASES
 
-[Импорты библиотек]
+[Library imports]
 
 # START_FUNCTION_[FunctionName]
 # START_CONTRACT:
-# PURPOSE:[Краткое описание ответственности функции.]
+# PURPOSE:[Brief description of the function's responsibility.]
 # INPUTS:
-# - [Описание аргумента] =>[имя]: [Тип]
+# - [Argument description] =>[name]: [Type]
 # OUTPUTS:
-# - [Тип] -[Описание возвращаемого значения]
-# SIDE_EFFECTS: [Описание изменения глобального состояния/БД]
+# - [Type] -[Return value description]
+# SIDE_EFFECTS: [Description of global state/DB changes]
 # KEYWORDS:[PATTERN(X): ...; CONCEPT(Y): ...]
 # LINKS:[USES_API(X): ...; READS_DATA_FROM(Y): ...]
-# COMPLEXITY_SCORE:[1-10][Оценка сложности алгоритма. Если > 7, сегментация на блоки обязательна.]
+# COMPLEXITY_SCORE:[1-10][Algorithm complexity score. If > 7, block segmentation is mandatory.]
 # END_CONTRACT
 def [FunctionName](...):
     """
-    [Развернутое описание логики функции на русском (минимум 1 абзац). 
-    Это необходимо для активации SFT-весов генерации кода из docstrings.]
+    [Detailed description of function logic in English (at least 1 paragraph). 
+    Required to activate SFT weights for code generation from docstrings.]
     """
 #
-# === ИНСТРУКЦИИ LOG DRIVEN DEVELOPMENT 2.0 (LDD) ===
-# 1. СТРОГИЙ ФОРМАТ СТРОКИ ЛОГА:
-# f"[{КЛАССИФИКАТОР}][IMP:{1-10}][{ИМЯ_ФУНКЦИИ}][{ИМЯ_БЛОКА}][{ТИП_ОПЕРАЦИИ}] Описание[{СТАТУС}]"
-# 2. ШКАЛА IMPORTANCE (IMP):
-# -[IMP:1-3] (Trace): Локальные дампы переменных в циклах.
-# -[IMP:4-6] (Flow): Начало/конец блоков, вызовы внутренних функций, ветвления.
-# -[IMP:7-8] (I/O & Boundary): Обращение к БД, API, чтение файлов.
-# - [IMP:9-10] (Business Logic & AI Belief): Проверка гипотез, достижение AAG Goal, критические ошибки. Вы обязаны логировать вашу "веру" о том, как код должен работать.
-# 3. EXCEPTION ENRICHMENT: В сложных функциях при падении выводите локальный контекст на IMP:10.
-# 4. XML-DOM РАЗМЕТКА: Внутренний код ОБЯЗАН биться на блоки: # START_BLOCK_[NAME] ... # END_BLOCK_[NAME]
+# === LOG DRIVEN DEVELOPMENT 2.0 (LDD) INSTRUCTIONS ===
+# 1. STRICT LOG LINE FORMAT:
+# f"[{CLASSIFIER}][IMP:{1-10}][{FUNCTION_NAME}][{BLOCK_NAME}][{OPERATION_TYPE}] Description[{STATUS}]"
+# 2. IMPORTANCE (IMP) SCALE:
+# -[IMP:1-3] (Trace): Local variable dumps in loops.
+# -[IMP:4-6] (Flow): Start/end of blocks, internal function calls, branching.
+# -[IMP:7-8] (I/O & Boundary): DB access, API calls, file reads.
+# - [IMP:9-10] (Business Logic & AI Belief): Hypothesis testing, AAG Goal achievement, critical errors. You MUST log your "belief" about how the code should work.
+# 3. EXCEPTION ENRICHMENT: In complex functions, output local context at IMP:10 on failure.
+# 4. XML-DOM MARKUP: Internal code MUST be split into blocks: # START_BLOCK_[NAME] ... # END_BLOCK_[NAME]
 #
     
-    # START_BLOCK_[BLOCK_NAME_1]:[Краткое описание блока]
-    [Логика блока 1]
+    # START_BLOCK_[BLOCK_NAME_1]:[Brief block description]
+    [Block 1 logic]
     # END_BLOCK_[BLOCK_NAME_1]
     
     return [Result]
 # END_FUNCTION_[FunctionName]
 
 
-=== ONE-SHOT ПРИМЕР (Проверка библиотек) ===
+=== ONE-SHOT EXAMPLE (Library Check) ===
 
 # FILE: tools/check_ai_libs.py
 # VERSION: 1.0.0
 # START_MODULE_CONTRACT:
-# PURPOSE: Проверка наличия установленных целевых библиотек, наиболее эффективных для обучения ИИ.
-# SCOPE: Интроспекция системного окружения, проверка зависимостей.
-# INPUT: Отсутствует (работает с текущим окружением Python).
-# OUTPUT: Словарь со статусами установки запрошенных модулей.
+# PURPOSE: Verification of target AI-efficient libraries presence in the environment.
+# SCOPE: System environment introspection, dependency checking.
+# INPUT: None (works with current Python environment).
+# OUTPUT: Dictionary with installation statuses of requested modules.
 # KEYWORDS:[DOMAIN(8): Environment; CONCEPT(7): DependencyCheck; TECH(9): PythonImport]
 # LINKS:[USES_API(8): importlib]
 # END_MODULE_CONTRACT
 #
 # START_INVARIANTS:
-# - Функция check_all_libraries ВСЕГДА возвращает словарь.
-# - Словарь ВСЕГДА содержит все библиотеки из целевого списка в качестве ключей.
+# - check_all_libraries ALWAYS returns a dictionary.
+# - Dictionary ALWAYS contains all target libraries as keys.
 # END_INVARIANTS
 #
 # START_RATIONALE:
-# Q: Почему используется importlib.util.find_spec, а не прямые import выражения?
-# A: Прямой импорт (import numpy) вызовет ImportError и прервет скрипт на первой же отсутствующей библиотеке. find_spec позволяет безопасно собрать полную картину окружения.
+# Q: Why use importlib.util.find_spec instead of direct import statements?
+# A: Direct import (import numpy) triggers ImportError and halts the script on the first missing library. find_spec allows safe collection of the full environment picture.
 # END_RATIONALE
 #
 # START_CHANGE_SUMMARY:
-# LAST_CHANGE: [v1.0.0 - Первичное создание модуля проверки системных и ML-библиотек.]
+# LAST_CHANGE: [v1.0.0 - Initial creation of system and ML library verification module.]
 # END_CHANGE_SUMMARY
 #
 # START_MODULE_MAP:
-# FUNC 10[Проверяет наличие списка целевых ИИ библиотек в окружении] => check_all_libraries
+# FUNC 10[Checks presence of target AI libraries in the environment] => check_all_libraries
 # END_MODULE_MAP
 #
 # START_USE_CASES:
@@ -218,24 +207,24 @@ logger = logging.getLogger(__name__)
 
 # START_FUNCTION_check_all_libraries
 # START_CONTRACT:
-# PURPOSE: Итерируется по спискам системных и ML-библиотек, проверяя их доступность.
-# INPUTS: Нет
+# PURPOSE: Iterates through system and ML libraries lists, checking availability.
+# INPUTS: None
 # OUTPUTS: 
-# - dict - Словарь, где ключ - имя библиотеки (str), значение - статус установки (bool)
-# SIDE_EFFECTS: Отсутствуют.
+# - dict - Dictionary where key is library name (str), value is install status (bool)
+# SIDE_EFFECTS: None.
 # KEYWORDS:[PATTERN(6): Iterator; CONCEPT(8): Introspection]
 # LINKS:[USES_API(8): importlib.util]
-# COMPLEXITY_SCORE: 5[Средняя сложность из-за итерации и обработки исключений.]
+# COMPLEXITY_SCORE: 5[Medium complexity due to iteration and exception handling.]
 # END_CONTRACT
 def check_all_libraries() -> dict:
     """
-    Функция выполняет интроспекцию текущего окружения Python для поиска предустановленных библиотек.
-    Она использует importlib для безопасной проверки наличия пакетов без их фактической загрузки в память,
-    что предотвращает побочные эффекты и ошибки импорта. Результат возвращается в виде словаря
-    для последующего анализа системной готовности к задачам ML.
+    Function performs introspection of the current Python environment to find pre-installed libraries.
+    It uses importlib for safe package presence verification without actual memory loading,
+    preventing side effects and import errors. Result is returned as a dictionary for
+    subsequent ML readiness analysis.
     """
     
-    # START_BLOCK_INITIALIZE_LISTS: [Формирование списков целевых библиотек]
+    # START_BLOCK_INITIALIZE_LISTS: [Generating target libraries lists]
     system_libs =[
         "math", "random", "statistics", "decimal", "datetime", "time", "re", 
         "os", "sys", "csv", "json", "sqlite3", "xml.etree.ElementTree", 
@@ -251,26 +240,26 @@ def check_all_libraries() -> dict:
     all_libs = system_libs + ml_libs
     result_map = {}
     
-    logger.debug(f"[VarCheck][IMP:4][check_all_libraries][INITIALIZE_LISTS][Params] Списки инициализированы. Всего библиотек: {len(all_libs)} [INFO]")
+    logger.debug(f"[VarCheck][IMP:4][check_all_libraries][INITIALIZE_LISTS][Params] Lists initialized. Total libraries: {len(all_libs)} [INFO]")
     # END_BLOCK_INITIALIZE_LISTS
     
-    # START_BLOCK_VERIFY_DEPENDENCIES: [Итерация и безопасная проверка спецификаций импорта]
+    # START_BLOCK_VERIFY_DEPENDENCIES: [Iteration and safe import spec checking]
     for lib_name in all_libs:
         try:
             spec = importlib.util.find_spec(lib_name)
             is_installed = spec is not None
             result_map[lib_name] = is_installed
             
-            logger.debug(f"[LibCheck][IMP:3][check_all_libraries][VERIFY_DEPENDENCIES][ConditionCheck] Пакет {lib_name} найден: {is_installed}[{'SUCCESS' if is_installed else 'FAIL'}]")
+            logger.debug(f"[LibCheck][IMP:3][check_all_libraries][VERIFY_DEPENDENCIES][ConditionCheck] Package {lib_name} found: {is_installed}[{'SUCCESS' if is_installed else 'FAIL'}]")
         except Exception as e:
-            # BUG_FIX_CONTEXT: Ранее ловили ImportError, но find_spec может кидать ValueError на кривых путях. Расширили до Exception.
+            # BUG_FIX_CONTEXT: Previously caught ImportError, but find_spec can throw ValueError on malformed paths. Expanded to Exception.
             result_map[lib_name] = False
-            logger.critical(f"[SystemError][IMP:10][check_all_libraries][VERIFY_DEPENDENCIES][ExceptionEnrichment] Сбой при поиске {lib_name}. Local vars: lib_name={lib_name}. Err: {e} [FATAL]")
+            logger.critical(f"[SystemError][IMP:10][check_all_libraries][VERIFY_DEPENDENCIES][ExceptionEnrichment] Failure searching for {lib_name}. Local vars: lib_name={lib_name}. Err: {e} [FATAL]")
     # END_BLOCK_VERIFY_DEPENDENCIES
 
-    # START_BLOCK_RETURN_RESULTS:[Подведение итогов и возврат]
+    # START_BLOCK_RETURN_RESULTS:[Summary and return]
     installed_count = sum(result_map.values())
-    logger.info(f"[BeliefState][IMP:9][check_all_libraries][RETURN_RESULTS][ReturnData] Установлено {installed_count} из {len(all_libs)} библиотек. [VALUE]")
+    logger.info(f"[BeliefState][IMP:9][check_all_libraries][RETURN_RESULTS][ReturnData] Installed {installed_count} out of {len(all_libs)} libraries. [VALUE]")
     
     return result_map
     # END_BLOCK_RETURN_RESULTS

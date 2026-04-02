@@ -1,0 +1,59 @@
+<KnowledgeGraph>
+  <Lesson_19_ERP_Prototype_Info>
+    <keywords>ERP, Dash, AGGrid, SQLite, Master-Detail</keywords>
+    <terms>Invoice, InvoiceLine, Callback, Handler</terms>
+    <annotation>Прототип ERP-системы для управления накладными с использованием Dash и AG Grid.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="GenerateData">Пользователь генерирует 5 случайных накладных для демонстрации.</Scenario>
+      <Scenario NAME="EditInvoice">Пользователь выбирает накладную и редактирует количество товаров с пересчетом суммы.</Scenario>
+      <Scenario NAME="Analytics">Пользователь просматривает график распределения сумм по накладным.</Scenario>
+    </BusinessScenarios>
+  </Lesson_19_ERP_Prototype_Info>
+
+  <lesson_19_db_manager_py FILE="lesson_19/db_manager.py" TYPE="DATA_ACCESS_LAYER">
+    <db_init_db_FUNC NAME="init_db" TYPE="DB_OP">
+      <annotation>Инициализация таблиц invoices и invoice_lines с поддержкой FK.</annotation>
+    </db_init_db_FUNC>
+    <db_execute_query_FUNC NAME="execute_query" TYPE="DB_OP" />
+    <db_execute_insert_FUNC NAME="execute_insert" TYPE="DB_OP" />
+    <db_fetch_query_FUNC NAME="fetch_query" TYPE="DB_OP" />
+  </lesson_19_db_manager_py>
+
+  <lesson_19_config_manager_py FILE="lesson_19/config_manager.py" TYPE="CONFIG_LAYER">
+    <config_get_products_FUNC NAME="get_products" TYPE="DATA_PROVIDER" />
+    <config_load_config_FUNC NAME="load_config" TYPE="CONFIG_LOADER" />
+  </lesson_19_config_manager_py>
+
+  <lesson_19_handlers_py FILE="lesson_19/handlers.py" TYPE="BUSINESS_LOGIC_LAYER">
+    <handlers_generate_mock_data_FUNC NAME="generate_mock_data" TYPE="LOGIC_FUNC">
+      <CrossLinks>
+        <Link TARGET="db_execute_query_FUNC" TYPE="CALLS" />
+        <Link TARGET="db_execute_insert_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </handlers_generate_mock_data_FUNC>
+    <handlers_get_invoices_FUNC NAME="get_invoices" TYPE="LOGIC_FUNC" />
+    <handlers_get_invoice_lines_FUNC NAME="get_invoice_lines" TYPE="LOGIC_FUNC" />
+    <handlers_update_invoice_lines_FUNC NAME="update_invoice_lines" TYPE="LOGIC_FUNC" />
+  </lesson_19_handlers_py>
+
+  <lesson_19_app_py FILE="lesson_19/app.py" TYPE="UI_LAYER">
+    <app_create_app_FUNC NAME="create_app" TYPE="UI_FACTORY" />
+    <app_register_callbacks_FUNC NAME="register_callbacks" TYPE="UI_LOGIC" />
+    <app_update_master_logic_FUNC NAME="update_master_logic" TYPE="UI_LOGIC">
+      <CrossLinks>
+        <Link TARGET="handlers_generate_mock_data_FUNC" TYPE="CALLS" />
+        <Link TARGET="handlers_get_invoices_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </app_update_master_logic_FUNC>
+    <app_update_detail_logic_FUNC NAME="update_detail_logic" TYPE="UI_LOGIC">
+      <CrossLinks>
+        <Link TARGET="handlers_get_invoice_lines_FUNC" TYPE="CALLS" />
+      </CrossLinks>
+    </app_update_detail_logic_FUNC>
+  </lesson_19_app_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link SOURCE="lesson_19_app_py" TARGET="lesson_19_handlers_py" TYPE="DEPENDS_ON" />
+    <Link SOURCE="lesson_19_handlers_py" TARGET="lesson_19_db_manager_py" TYPE="DEPENDS_ON" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>

@@ -1,0 +1,76 @@
+<KnowledgeGraph>
+  <lesson_21_ERP_Prototype_Info>
+    <keywords>ERP, Dash, Ag-Grid, SQLite, LDD 2.0</keywords>
+    <terms>Master-Detail, Analytics, Transactional Integrity</terms>
+    <annotation>Прототип ERP-системы для управления накладными с использованием Dash и Ag-Grid.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="Manage Invoices">Пользователь просматривает список накладных, ищет товары и добавляет их в выбранную накладную с автоматическим пересчетом итогов.</Scenario>
+    </BusinessScenarios>
+  </lesson_21_ERP_Prototype_Info>
+
+  <db_manager_py FILE="lesson_21/db_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>SQLite, Schema, DemoData</keywords>
+    <terms>RowFactory, ConnectionPool</terms>
+    <annotation>Модуль управления базой данных: инициализация таблиц и демо-данных.</annotation>
+    <db_manager_get_connection_FUNC NAME="get_connection" TYPE="FUNCTION">
+      <annotation>Возвращает соединение с SQLite с настроенным RowFactory.</annotation>
+    </db_manager_get_connection_FUNC>
+    <db_manager_init_db_FUNC NAME="init_db" TYPE="FUNCTION">
+      <annotation>Создает таблицы invoices, items, invoice_lines и наполняет справочник товаров.</annotation>
+    </db_manager_init_db_FUNC>
+  </db_manager_py>
+
+  <handlers_py FILE="lesson_21/handlers.py" TYPE="BUSINESS_LOGIC_MODULE">
+    <keywords>BusinessLogic, SQL_LIKE, Transactions</keywords>
+    <terms>Recalculation, Master-Detail Data</terms>
+    <annotation>Чистая бизнес-логика системы, изолированная от UI-фреймворка.</annotation>
+    <handlers_search_items_FUNC NAME="search_items" TYPE="FUNCTION">
+      <annotation>Поиск товаров по частичному совпадению SKU или имени.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_get_connection_FUNC" TYPE="CALLS"/>
+      </CrossLinks>
+    </handlers_search_items_FUNC>
+    <handlers_add_line_to_invoice_FUNC NAME="add_line_to_invoice" TYPE="FUNCTION">
+      <annotation>Добавление строки в накладную с атомарным обновлением total_sum.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_get_connection_FUNC" TYPE="CALLS"/>
+      </CrossLinks>
+    </handlers_add_line_to_invoice_FUNC>
+    <handlers_update_line_qty_FUNC NAME="update_line_qty" TYPE="FUNCTION">
+      <annotation>Обновление количества в строке и пересчет итогов накладной.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_get_connection_FUNC" TYPE="CALLS"/>
+      </CrossLinks>
+    </handlers_update_line_qty_FUNC>
+    <handlers_get_invoices_FUNC NAME="get_invoices" TYPE="FUNCTION">
+      <annotation>Получение списка всех накладных для Master Grid.</annotation>
+    </handlers_get_invoices_FUNC>
+    <handlers_get_invoice_lines_FUNC NAME="get_invoice_lines" TYPE="FUNCTION">
+      <annotation>Получение детализации накладной (строк) с JOIN к товарам.</annotation>
+    </handlers_get_invoice_lines_FUNC>
+    <handlers_create_demo_invoice_FUNC NAME="create_demo_invoice" TYPE="FUNCTION">
+      <annotation>Создание новой пустой накладной.</annotation>
+    </handlers_create_demo_invoice_FUNC>
+  </handlers_py>
+
+  <app_py FILE="lesson_21/app.py" TYPE="UI_MODULE">
+    <keywords>Dash, Callbacks, Ag-Grid, Analytics</keywords>
+    <terms>Master-Detail, 100% Reliability Pattern</terms>
+    <annotation>Модуль пользовательского интерфейса и маршрутизации данных.</annotation>
+    <CrossLinks>
+      <Link TARGET="handlers_py" TYPE="CALLS"/>
+    </CrossLinks>
+  </app_py>
+  
+  <test_handlers_py FILE="lesson_21/tests/test_handlers.py" TYPE="TEST_MODULE">
+    <annotation>Набор тестов для верификации бизнес-логики и LDD-траекторий.</annotation>
+    <CrossLinks>
+      <Link TARGET="handlers_py" TYPE="TESTS"/>
+    </CrossLinks>
+  </test_handlers_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link SOURCE="handlers_py" TARGET="db_manager_py" TYPE="DEPENDS_ON"/>
+    <Link SOURCE="test_handlers_py" TARGET="handlers_py" TYPE="VERIFIES"/>
+  </ProjectCrossLinks>
+</KnowledgeGraph>

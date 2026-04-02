@@ -1,0 +1,5 @@
+{
+    "db_path": "lesson_19/erp_base.db",
+    "log_path": "lesson_19/app_19.log",
+    "mock_invoice_count": 5
+}

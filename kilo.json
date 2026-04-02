@@ -1,0 +1,14 @@
+{
+  "permission": {
+    "task": "allow",
+    "bash": "allow",
+    "edit": "allow",
+    "read": "allow",
+    "write": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "todowrite": "allow"
+  },
+  "snapshot": true,
+  "autoupdate": "notify"
+}

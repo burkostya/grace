@@ -1,0 +1,68 @@
+<KnowledgeGraph>
+  <lesson_22_Info TYPE="PROJECT_INFO">
+    <keywords>Parabola, SQLite, Gradio, LDD, SemanticMarkup</keywords>
+    <annotation>Учебное приложение для визуализации параболы с использованием SQL-хранилища и семантической разметки.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="GenerateData">User -> Input Params -> Calculate -> Save SQL -> Display Table</Scenario>
+      <Scenario NAME="DrawGraph">User -> Click Draw -> Read SQL -> Render Plotly</Scenario>
+    </BusinessScenarios>
+  </lesson_22_Info>
+
+  <lesson_22_config_manager_py FILE="lesson_22/config_manager.py" TYPE="DATA_ACCESS_MODULE">
+    <annotation>Управление конфигурацией (config.json).</annotation>
+    <load_config_FUNC NAME="load_config" TYPE="HELPER_FUNCTION">
+      <keywords>JSON, Configuration, Loading</keywords>
+    </load_config_FUNC>
+    <save_config_FUNC NAME="save_config" TYPE="HELPER_FUNCTION">
+      <keywords>JSON, StatePersistence, Saving</keywords>
+    </save_config_FUNC>
+  </lesson_22_config_manager_py>
+
+  <lesson_22_db_manager_py FILE="lesson_22/db_manager.py" TYPE="DATA_ACCESS_MODULE">
+    <annotation>Работа с SQLite (points_22.db).</annotation>
+    <init_db_FUNC NAME="init_db" TYPE="HELPER_FUNCTION" />
+    <save_points_FUNC NAME="save_points" TYPE="HELPER_FUNCTION">
+      <keywords>BatchInsert, Transaction, Persistence</keywords>
+    </save_points_FUNC>
+    <get_points_FUNC NAME="get_points" TYPE="HELPER_FUNCTION" />
+  </lesson_22_db_manager_py>
+
+  <lesson_22_calculator_py FILE="lesson_22/calculator.py" TYPE="LOGIC_MODULE">
+    <annotation>Расчет точек параболы.</annotation>
+    <calculate_parabola_FUNC NAME="calculate_parabola" TYPE="BUSINESS_LOGIC">
+      <keywords>Math, Parabola, Generation</keywords>
+    </calculate_parabola_FUNC>
+  </lesson_22_calculator_py>
+
+  <lesson_22_ui_py FILE="lesson_22/ui.py" TYPE="UI_MODULE">
+    <annotation>Интерфейс Gradio и контроллеры.</annotation>
+    <create_ui_FUNC NAME="create_ui" TYPE="UI_FACTORY">
+      <CrossLinks>
+        <Link TARGET="lesson_22_config_manager_py_load_config_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="lesson_22_db_manager_py_init_db_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </create_ui_FUNC>
+    <handle_generate_FUNC NAME="handle_generate" TYPE="CONTROLLER">
+      <CrossLinks>
+        <Link TARGET="lesson_22_config_manager_py_save_config_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="lesson_22_calculator_py_calculate_parabola_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="lesson_22_db_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="lesson_22_db_manager_py_get_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_generate_FUNC>
+    <handle_draw_FUNC NAME="handle_draw" TYPE="CONTROLLER">
+      <CrossLinks>
+        <Link TARGET="lesson_22_db_manager_py_get_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_draw_FUNC>
+  </lesson_22_ui_py>
+
+  <run_lesson_22_py FILE="run_lesson_22.py" TYPE="ENTRY_POINT">
+    <annotation>Запуск приложения.</annotation>
+    <main_FUNC NAME="main" TYPE="STARTUP">
+      <CrossLinks>
+        <Link TARGET="lesson_22_ui_py_create_ui_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </main_FUNC>
+  </run_lesson_22_py>
+</KnowledgeGraph>

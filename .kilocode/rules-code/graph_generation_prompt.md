@@ -1,34 +1,34 @@
-# Промпт для генерации XML-графа знаний о коде проекта
+# XML Knowledge Graph Generation Prompt
 
-**Задача:**
+**Objective:**
 
-Создай иерархический и сетевой граф знаний по предоставленной базе кода проекта в формате XML. Граф должен служить высокоуровневой семантической картой для RAG AI-агента, помогая ему в навигации, понимании структуры кода, зависимостей и потоков управления.
+Create a hierarchical and networked knowledge graph based on the provided project codebase in XML format. The graph should serve as a high-level semantic map for a RAG AI agent, assisting in navigation, understanding code structure, dependencies, and control flows.
 
-**Общая структура графа:**
+**General Graph Structure:**
 
-1.  Весь граф заключается в корневой тег `<KnowledgeGraph>`.
-2.  Первым дочерним элементом должен быть тег, описывающий проект в целом, например, `<ИМЯ_ПРОЕКТА_Версия_Info>`. Он должен содержать общие `keywords`, `terms`, и `annotation` для всего проекта, а также секцию `<BusinessScenarios>`.
+1.  Wrap the entire graph in a root `<KnowledgeGraph>` tag.
+2.  The first child element should describe the project as a whole, e.g., `<PROJECT_NAME_Version_Info>`. It must contain global `keywords`, `terms`, and `annotation` for the entire project, as well as a `<BusinessScenarios>` section.
 
-**Правила для элементов графа:**
+**Rules for Graph Elements:**
 
-**I. Именование тегов и `TARGET` в `<Link>`:**
+**I. Tag Naming and `TARGET` in `<Link>`:**
 
-1.  **Уникальность:** Каждое имя тега должно быть уникальным в пределах всего документа.
-2.  **Формирование:**
-    *   Замени точки (`.`) на подчеркивание (`_`).
-    *   К имени тега добавь суффикс типа: `_py` (модуль), `_CLASS` (класс), `_FUNC` (функция), `_METHOD` (метод).
-    *   Пример: `utils.load_data` -> `<utils_load_data_FUNC>`.
-3.  **Атрибуты:** Используй `FILE="..."` для модулей и `NAME="..."` для остальных сущностей для хранения оригинальных имен.
+1.  **Uniqueness:** Each tag name must be unique within the document.
+2.  **Formatting:**
+    *   Replace dots (`.`) with underscores (`_`).
+    *   Add a type suffix to the tag name: `_py` (module), `_CLASS` (class), `_FUNC` (function), `_METHOD` (method).
+    *   Example: `utils.load_data` -> `<utils_load_data_FUNC>`.
+3.  **Attributes:** Use `FILE="..."` for modules and `NAME="..."` for other entities to store original names.
 
-**II. Структура тега сущности:**
+**II. Entity Tag Structure:**
 
-1.  **Атрибут `TYPE`:** Обязателен (например, `DATA_PROCESSING_MODULE`, `IS_CLASS_OF_MODULE`, `IS_METHOD_OF_CLASS`).
-2.  **Дочерние элементы:** `<keywords>`, `<terms>`, `<annotation>`.
-3.  **Вложенность:** Сущности вкладываются друг в друга иерархически (модуль -> класс -> метод).
-4.  **Связи (`<CrossLinks>`):**
-    *   Используй тег `<Link TARGET="Уникальное_Имя_Тега" TYPE="ТИП_СВЯЗИ" .../>`.
-    *   Типы связей: `CALLS_METHOD`, `CREATES_INSTANCE_OF`, `SENDS_EVENT_TO` и т.д.
+1.  **`TYPE` Attribute:** Mandatory (e.g., `DATA_PROCESSING_MODULE`, `IS_CLASS_OF_MODULE`, `IS_METHOD_OF_CLASS`).
+2.  **Child Elements:** `<keywords>`, `<terms>`, `<annotation>`.
+3.  **Hierarchy:** Entities are nested hierarchically (module -> class -> method).
+4.  **Relationships (`<CrossLinks>`):**
+    *   Use the tag `<Link TARGET="Unique_Tag_Name" TYPE="RELATIONSHIP_TYPE" .../>`.
+    *   Relationship types: `CALLS_METHOD`, `CREATES_INSTANCE_OF`, `SENDS_EVENT_TO`, etc.
 
-**III. Общая секция `<ProjectCrossLinks>`:**
+**III. Global `<ProjectCrossLinks>` Section:**
 
-*   В конце графа, внутри корневого тега проекта, может быть добавлена общая секция `<ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">` для описания высокоуровневых взаимодействий между модулями.
+*   At the end of the graph, inside the project's root tag, a global `<ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">` section can be added to describe high-level interactions between modules.

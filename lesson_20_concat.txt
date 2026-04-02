@@ -1,0 +1,1010 @@
+$START_FILE lesson_20\app.py 3869
+# FILE:lesson_20/app.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Определение интерфейса Gradio для Lesson 20.
+# SCOPE:Создание UI компонентов и привязка обработчиков.
+# INPUT:Конфигурация из config.json.
+# OUTPUT:Объект Gradio Blocks.
+# KEYWORDS:[DOMAIN(8): UI; CONCEPT(7): Interface; TECH(9): Gradio]
+# LINKS:[USES_API(8): gradio]
+# END_MODULE_CONTRACT
+#
+# START_RATIONALE:
+# Q: Почему используется Gradio Blocks?
+# A: Это позволяет гибко настраивать макет UI с колонками и вкладками.
+# END_RATIONALE
+#
+# START_CHANGE_SUMMARY:
+# LAST_CHANGE: [v1.0.0 - Создание модуля интерфейса Gradio.]
+# END_CHANGE_SUMMARY
+#
+# START_MODULE_MAP:
+# FUNC 10[Создает и возвращает интерфейс Gradio] => create_app
+# END_MODULE_MAP
+
+import gradio as gr
+import logging
+from lesson_20.config_manager import load_config
+from lesson_20.handlers import handle_generate, handle_draw
+
+logger = logging.getLogger("lesson_20")
+
+# START_FUNCTION_create_app
+# START_CONTRACT:
+# PURPOSE:Создание интерфейса Gradio для генерации и визуализации параболы.
+# INPUTS: Нет
+# OUTPUTS:
+# - gr.Blocks - Объект интерфейса Gradio
+# KEYWORDS:[PATTERN(6): Factory]
+# COMPLEXITY_SCORE: 6
+# END_CONTRACT
+def create_app() -> gr.Blocks:
+    """
+    Создает и настраивает интерфейс Gradio с использованием Blocks.
+    Загружает начальные значения из конфигурации.
+    """
+    # START_BLOCK_LOAD_INITIAL_CONFIG: [Загрузка начального конфига]
+    config = load_config()
+    logger.info(f"[App][IMP:7][create_app][LOAD_INITIAL_CONFIG][Success] Начальный конфиг загружен. [INFO]")
+    # END_BLOCK_LOAD_INITIAL_CONFIG
+    
+    # START_BLOCK_DEFINE_UI: [Определение макета UI]
+    with gr.Blocks(title="Lesson 20: Parabola Generator") as app:
+        gr.Markdown("# Lesson 20: Parabola Generator y = ax^2 + c")
+        
+        with gr.Row():
+            with gr.Column(scale=1):
+                gr.Markdown("### Parameters")
+                a_input = gr.Number(label="Coefficient a", value=config.get("a", 1.0))
+                c_input = gr.Number(label="Coefficient c", value=config.get("c", 0.0))
+                x_min_input = gr.Number(label="x_min", value=config.get("x_min", -10.0))
+                x_max_input = gr.Number(label="x_max", value=config.get("x_max", 10.0))
+                
+                generate_btn = gr.Button("Generate Points", variant="primary")
+                draw_btn = gr.Button("Draw Graph", variant="secondary")
+                
+            with gr.Column(scale=2):
+                with gr.Tabs():
+                    with gr.TabItem("Table"):
+                        table_output = gr.DataFrame(label="Generated Points")
+                    with gr.TabItem("Graph"):
+                        plot_output = gr.Plot(label="Parabola Visualization")
+        
+        # START_BLOCK_BIND_HANDLERS: [Привязка обработчиков событий]
+        generate_btn.click(
+            fn=handle_generate,
+            inputs=[a_input, c_input, x_min_input, x_max_input],
+            outputs=table_output
+        )
+        
+        draw_btn.click(
+            fn=handle_draw,
+            inputs=[],
+            outputs=plot_output
+        )
+        # END_BLOCK_BIND_HANDLERS
+        
+    logger.info(f"[App][IMP:9][create_app][DEFINE_UI][Success] Интерфейс Gradio создан. [VALUE]")
+    return app
+    # END_BLOCK_DEFINE_UI
+# END_FUNCTION_create_app
+$END_FILE lesson_20\app.py
+
+$START_FILE lesson_20\AppGraph.xml 4369
+<KnowledgeGraph>
+  <Lesson_20_Info TYPE="PROJECT_INFO">
+    <keywords>Parabola, Gradio, SQLite, LDD, Education</keywords>
+    <terms>y = ax^2 + c, Headless Testing, Semantic Exoskeleton</terms>
+    <annotation>Учебный проект для генерации и визуализации параболы с использованием Gradio и SQLite.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="Generate Parabola">Пользователь вводит параметры, система рассчитывает 100 точек, сохраняет их в БД и отображает в таблице.</Scenario>
+      <Scenario NAME="Visualize Parabola">Система загружает точки из БД и строит интерактивный график Plotly.</Scenario>
+    </BusinessScenarios>
+  </Lesson_20_Info>
+
+  <config_manager_py FILE="lesson_20/config_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>JSON, Config, State</keywords>
+    <load_config_FUNC NAME="load_config" TYPE="FUNCTION">
+      <annotation>Загружает параметры a, c, x_min, x_max из JSON.</annotation>
+    </load_config_FUNC>
+    <save_config_FUNC NAME="save_config" TYPE="FUNCTION">
+      <annotation>Сохраняет параметры в JSON.</annotation>
+    </save_config_FUNC>
+  </config_manager_py>
+
+  <db_manager_py FILE="lesson_20/db_manager.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>SQLite, Persistence, SQL</keywords>
+    <init_db_FUNC NAME="init_db" TYPE="FUNCTION">
+      <annotation>Создает таблицу points.</annotation>
+    </init_db_FUNC>
+    <save_points_FUNC NAME="save_points" TYPE="FUNCTION">
+      <annotation>Сохраняет список точек (x, y) в БД.</annotation>
+    </save_points_FUNC>
+    <get_points_FUNC NAME="get_points" TYPE="FUNCTION">
+      <annotation>Загружает все точки из БД.</annotation>
+    </get_points_FUNC>
+  </db_manager_py>
+
+  <logic_py FILE="lesson_20/logic.py" TYPE="DATA_PROCESSING_MODULE">
+    <keywords>Math, Parabola, Calculation</keywords>
+    <calculate_parabola_FUNC NAME="calculate_parabola" TYPE="FUNCTION">
+      <annotation>Рассчитывает 100 точек y = ax^2 + c.</annotation>
+    </calculate_parabola_FUNC>
+  </logic_py>
+
+  <handlers_py FILE="lesson_20/handlers.py" TYPE="IS_METHOD_OF_CLASS">
+    <keywords>UI, Controller, Gradio, Plotly</keywords>
+    <handle_generate_FUNC NAME="handle_generate" TYPE="FUNCTION">
+      <annotation>Координирует сохранение конфига, расчет и запись в БД.</annotation>
+      <CrossLinks>
+        <Link TARGET="config_manager_py_save_config_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="logic_py_calculate_parabola_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="db_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_generate_FUNC>
+    <handle_draw_FUNC NAME="handle_draw" TYPE="FUNCTION">
+      <annotation>Загружает данные и строит график.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_py_get_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_draw_FUNC>
+  </handlers_py>
+
+  <app_py FILE="lesson_20/app.py" TYPE="UI_MODULE">
+    <annotation>Определяет интерфейс Gradio Blocks.</annotation>
+    <create_app_FUNC NAME="create_app" TYPE="FUNCTION">
+      <CrossLinks>
+        <Link TARGET="handlers_py_handle_generate_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="handlers_py_handle_draw_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </create_app_FUNC>
+  </app_py>
+
+  <run_lesson_20_py FILE="run_lesson_20.py" TYPE="ENTRY_POINT">
+    <annotation>Точка входа: настройка LDD логирования и запуск сервера.</annotation>
+    <CrossLinks>
+      <Link TARGET="db_manager_py_init_db_FUNC" TYPE="CALLS_FUNCTION" />
+      <Link TARGET="app_py_create_app_FUNC" TYPE="CALLS_FUNCTION" />
+    </CrossLinks>
+  </run_lesson_20_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link TARGET="run_lesson_20_py" TYPE="ORCHESTRATES_STARTUP" />
+    <Link TARGET="handlers_py" TYPE="MEDIATES_UI_AND_LOGIC" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>
+$END_FILE lesson_20\AppGraph.xml
+
+$START_FILE lesson_20\app_20.log 2223
+2026-03-25 16:05:18,532 - lesson_20 - INFO - [Launcher][IMP:8][main][SETUP_LOGGING][Success] Логирование настроено: lesson_20/app_20.log. [SUCCESS]
+2026-03-25 16:05:31,038 - lesson_20 - INFO - [Launcher][IMP:7][main][LAZY_IMPORTS][Success] Модули импортированы. [INFO]
+2026-03-25 16:05:31,055 - lesson_20 - INFO - [DB][IMP:8][init_db][CREATE_TABLE][Success] БД инициализирована: lesson_20/points.db. [SUCCESS]
+2026-03-25 16:05:31,058 - lesson_20 - INFO - [Launcher][IMP:8][main][INIT_DB][Success] БД инициализирована. [SUCCESS]
+2026-03-25 16:05:31,058 - lesson_20 - INFO - [Config][IMP:7][load_config][READ_FILE][Status] Файл не найден, используем default. [INFO]
+2026-03-25 16:05:31,058 - lesson_20 - INFO - [App][IMP:7][create_app][LOAD_INITIAL_CONFIG][Success] Начальный конфиг загружен. [INFO]
+2026-03-25 16:05:33,729 - lesson_20 - INFO - [App][IMP:9][create_app][DEFINE_UI][Success] Интерфейс Gradio создан. [VALUE]
+2026-03-25 16:05:33,730 - lesson_20 - INFO - [Launcher][IMP:9][main][LAUNCH_APP][Status] Запуск сервера Gradio... [VALUE]
+2026-03-25 16:05:44,362 - lesson_20 - INFO - [Config][IMP:9][save_config][WRITE_FILE][Success] Конфиг сохранен в lesson_20/config.json. [VALUE]
+2026-03-25 16:05:44,365 - lesson_20 - INFO - [UI][IMP:7][handle_generate][SAVE_CONFIG][Success] Конфиг обновлен. [INFO]
+2026-03-25 16:05:44,365 - lesson_20 - INFO - [Logic][IMP:9][calculate_parabola][GENERATE_POINTS][Success] Сгенерировано 100 точек. [VALUE]
+2026-03-25 16:05:44,377 - lesson_20 - INFO - [DB][IMP:9][save_points][INSERT_DATA][Success] Сохранено 100 точек. [VALUE]
+2026-03-25 16:05:44,378 - lesson_20 - INFO - [UI][IMP:9][handle_generate][CALC_AND_DB][Success] Точки сохранены в БД. [VALUE]
+2026-03-25 16:05:46,266 - lesson_20 - INFO - [DB][IMP:8][get_points][SELECT_DATA][Success] Загружено 100 точек. [SUCCESS]
+2026-03-25 16:05:47,463 - lesson_20 - INFO - [UI][IMP:9][handle_draw][CREATE_PLOT][Success] График построен по 100 точкам. [VALUE]
+$END_FILE lesson_20\app_20.log
+
+$START_FILE lesson_20\business_requirements.md 2593
+$START_DOC_NAME
+
+**PURPOSE:** Создание учебного приложения Lesson 20 для демонстрации фреймворка промтов (изоляция слоев, Agentic UX, Headless-тестирование, LDD).
+**SCOPE:** Генерация точек параболы y = ax^2 + c, сохранение в SQLite, визуализация через Gradio и Plotly.
+**KEYWORDS:** [DOMAIN: Education; CONCEPT: Parabola Generation; TECH: Gradio, Plotly, SQLite, LDD]
+
+$START_DOCUMENT_PLAN
+### План Документа
+
+**SECTION_GOALS:**
+- GOAL Реализовать расчет точек параболы и сохранение в БД => [GOAL_CALC_DB]
+- GOAL Обеспечить управление через Gradio с сохранением конфига => [GOAL_UI_CONFIG]
+- GOAL Покрыть бизнес-логику тестами (Backend & UI Headless) => [GOAL_TESTING]
+
+**SECTION_USE_CASES:**
+- USE_CASE Пользователь вводит параметры -> Нажимает Generate -> Данные в БД и таблице => [UC_GENERATE]
+- USE_CASE Пользователь нажимает Draw Graph -> График строится по данным из БД => [UC_DRAW]
+
+$END_DOCUMENT_PLAN
+
+$START_SECTION_REQUIREMENTS
+### Функциональные требования
+
+$START_ARTIFACT_CONFIG_MANAGER
+#### Config Manager
+
+**TYPE:** DATA_FORMAT
+**KEYWORDS:** [CONCEPT: State Management; TECH: JSON]
+
+$START_CONTRACT
+**PURPOSE:** Управление файлом config.json (a, c, x_min, x_max).
+**DESCRIPTION:** Модуль для чтения и записи параметров генерации.
+**RATIONALE:** Изоляция управления состоянием от бизнес-логики.
+**ACCEPTANCE_CRITERIA:** Параметры корректно сохраняются и считываются.
+$END_CONTRACT
+$END_ARTIFACT_CONFIG_MANAGER
+
+$START_ARTIFACT_DB_MANAGER
+#### DB Manager
+
+**TYPE:** DATA_FORMAT
+**KEYWORDS:** [TECH: SQLite]
+
+$START_CONTRACT
+**PURPOSE:** Хранение точек параболы (x, y).
+**DESCRIPTION:** Создание таблицы и вставка/выборка данных.
+**RATIONALE:** Демонстрация работы с персистентным хранилищем.
+**ACCEPTANCE_CRITERIA:** Данные сохраняются без потерь и считываются для графика.
+$END_CONTRACT
+$END_ARTIFACT_DB_MANAGER
+
+$END_SECTION_REQUIREMENTS
+
+$END_DOC_NAME
+$END_FILE lesson_20\business_requirements.md
+
+$START_FILE lesson_20\config.json 66
+{
+    "a": 1,
+    "c": 0,
+    "x_min": -10,
+    "x_max": 10
+}
+$END_FILE lesson_20\config.json
+
+$START_FILE lesson_20\config_manager.py 3975
+# FILE:lesson_20/config_manager.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Управление конфигурационным файлом JSON для параметров параболы.
+# SCOPE:Чтение и запись параметров a, c, x_min, x_max.
+# INPUT:Путь к файлу config.json.
+# OUTPUT:Словарь параметров или статус сохранения.
+# KEYWORDS:[DOMAIN(8): Configuration; CONCEPT(7): StateManagement; TECH(9): JSON]
+# LINKS:[USES_API(8): json]
+# END_MODULE_CONTRACT
+#
+# START_RATIONALE:
+# Q: Почему используется JSON для хранения параметров?
+# A: Это простое и человекочитаемое решение для хранения небольшого набора настроек UI.
+# END_RATIONALE
+#
+# START_CHANGE_SUMMARY:
+# LAST_CHANGE: [v1.0.0 - Создание модуля управления конфигурацией.]
+# END_CHANGE_SUMMARY
+#
+# START_MODULE_MAP:
+# FUNC 10[Загружает конфигурацию из файла] => load_config
+# FUNC 10[Сохраняет конфигурацию в файл] => save_config
+# END_MODULE_MAP
+
+import json
+import os
+import logging
+
+logger = logging.getLogger("lesson_20")
+
+# START_FUNCTION_load_config
+# START_CONTRACT:
+# PURPOSE:Загрузка параметров из JSON файла.
+# INPUTS:
+# - str => config_path: Путь к файлу
+# OUTPUTS:
+# - dict - Словарь с параметрами
+# KEYWORDS:[PATTERN(6): Loader]
+# COMPLEXITY_SCORE: 3
+# END_CONTRACT
+def load_config(config_path: str = "lesson_20/config.json") -> dict:
+    """
+    Загружает параметры параболы из указанного JSON файла. 
+    Если файл отсутствует, возвращает значения по умолчанию.
+    """
+    default_config = {"a": 1.0, "c": 0.0, "x_min": -10.0, "x_max": 10.0}
+    
+    # START_BLOCK_READ_FILE: [Чтение файла конфигурации]
+    if not os.path.exists(config_path):
+        logger.info(f"[Config][IMP:7][load_config][READ_FILE][Status] Файл не найден, используем default. [INFO]")
+        return default_config
+        
+    try:
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+            logger.info(f"[Config][IMP:8][load_config][READ_FILE][Success] Конфиг загружен из {config_path}. [SUCCESS]")
+            return config
+    except Exception as e:
+        logger.error(f"[Config][IMP:10][load_config][READ_FILE][Error] Ошибка чтения конфига: {e}. [FATAL]")
+        return default_config
+    # END_BLOCK_READ_FILE
+# END_FUNCTION_load_config
+
+# START_FUNCTION_save_config
+# START_CONTRACT:
+# PURPOSE:Сохранение параметров в JSON файл.
+# INPUTS:
+# - dict => config: Словарь параметров
+# - str => config_path: Путь к файлу
+# OUTPUTS:
+# - bool - Статус успеха
+# KEYWORDS:[PATTERN(6): Saver]
+# COMPLEXITY_SCORE: 3
+# END_CONTRACT
+def save_config(config: dict, config_path: str = "lesson_20/config.json") -> bool:
+    """
+    Сохраняет переданный словарь параметров в JSON файл.
+    """
+    # START_BLOCK_WRITE_FILE: [Запись в файл]
+    try:
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+        with open(config_path, 'w') as f:
+            json.dump(config, f, indent=4)
+        logger.info(f"[Config][IMP:9][save_config][WRITE_FILE][Success] Конфиг сохранен в {config_path}. [VALUE]")
+        return True
+    except Exception as e:
+        logger.error(f"[Config][IMP:10][save_config][WRITE_FILE][Error] Ошибка сохранения конфига: {e}. [FATAL]")
+        return False
+    # END_BLOCK_WRITE_FILE
+# END_FUNCTION_save_config
+$END_FILE lesson_20\config_manager.py
+
+$START_FILE lesson_20\db_manager.py 5061
+# FILE:lesson_20/db_manager.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Управление SQLite базой данных для хранения точек параболы.
+# SCOPE:Инициализация БД, сохранение и получение точек (x, y).
+# INPUT:Путь к файлу points.db.
+# OUTPUT:Статус операций или список точек.
+# KEYWORDS:[DOMAIN(8): Database; CONCEPT(7): Persistence; TECH(9): SQLite]
+# LINKS:[USES_API(8): sqlite3]
+# END_MODULE_CONTRACT
+#
+# START_RATIONALE:
+# Q: Почему используется SQLite?
+# A: Это легковесная БД, не требующая сервера, идеально подходит для учебных уроков.
+# END_RATIONALE
+#
+# START_CHANGE_SUMMARY:
+# LAST_CHANGE: [v1.0.0 - Создание модуля управления БД.]
+# END_CHANGE_SUMMARY
+#
+# START_MODULE_MAP:
+# FUNC 10[Инициализирует таблицу в БД] => init_db
+# FUNC 10[Сохраняет список точек в БД] => save_points
+# FUNC 10[Получает все точки из БД] => get_points
+# END_MODULE_MAP
+
+import sqlite3
+import os
+import logging
+
+logger = logging.getLogger("lesson_20")
+
+# START_FUNCTION_init_db
+# START_CONTRACT:
+# PURPOSE:Создание таблицы points в БД.
+# INPUTS:
+# - str => db_path: Путь к БД
+# OUTPUTS:
+# - bool - Статус успеха
+# KEYWORDS:[PATTERN(6): Initializer]
+# COMPLEXITY_SCORE: 4
+# END_CONTRACT
+def init_db(db_path: str = "lesson_20/points.db") -> bool:
+    """
+    Инициализирует базу данных SQLite и создает таблицу points, если она не существует.
+    """
+    # START_BLOCK_CREATE_TABLE: [Создание таблицы]
+    try:
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        with sqlite3.connect(db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS points (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    x REAL NOT NULL,
+                    y REAL NOT NULL
+                )
+            """)
+            conn.commit()
+        logger.info(f"[DB][IMP:8][init_db][CREATE_TABLE][Success] БД инициализирована: {db_path}. [SUCCESS]")
+        return True
+    except Exception as e:
+        logger.error(f"[DB][IMP:10][init_db][CREATE_TABLE][Error] Ошибка инициализации БД: {e}. [FATAL]")
+        return False
+    # END_BLOCK_CREATE_TABLE
+# END_FUNCTION_init_db
+
+# START_FUNCTION_save_points
+# START_CONTRACT:
+# PURPOSE:Сохранение списка точек в БД.
+# INPUTS:
+# - list => points: Список кортежей (x, y)
+# - str => db_path: Путь к БД
+# OUTPUTS:
+# - bool - Статус успеха
+# KEYWORDS:[PATTERN(6): Saver]
+# COMPLEXITY_SCORE: 5
+# END_CONTRACT
+def save_points(points: list, db_path: str = "lesson_20/points.db") -> bool:
+    """
+    Очищает таблицу points и сохраняет новый набор точек.
+    """
+    # START_BLOCK_INSERT_DATA: [Вставка данных]
+    try:
+        with sqlite3.connect(db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM points")
+            cursor.executemany("INSERT INTO points (x, y) VALUES (?, ?)", points)
+            conn.commit()
+        logger.info(f"[DB][IMP:9][save_points][INSERT_DATA][Success] Сохранено {len(points)} точек. [VALUE]")
+        return True
+    except Exception as e:
+        logger.error(f"[DB][IMP:10][save_points][INSERT_DATA][Error] Ошибка сохранения точек: {e}. [FATAL]")
+        return False
+    # END_BLOCK_INSERT_DATA
+# END_FUNCTION_save_points
+
+# START_FUNCTION_get_points
+# START_CONTRACT:
+# PURPOSE:Получение всех точек из БД.
+# INPUTS:
+# - str => db_path: Путь к БД
+# OUTPUTS:
+# - list - Список кортежей (x, y)
+# KEYWORDS:[PATTERN(6): Loader]
+# COMPLEXITY_SCORE: 4
+# END_CONTRACT
+def get_points(db_path: str = "lesson_20/points.db") -> list:
+    """
+    Выбирает все точки из таблицы points и возвращает их в виде списка кортежей.
+    """
+    # START_BLOCK_SELECT_DATA: [Выборка данных]
+    try:
+        with sqlite3.connect(db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT x, y FROM points ORDER BY x")
+            points = cursor.fetchall()
+        logger.info(f"[DB][IMP:8][get_points][SELECT_DATA][Success] Загружено {len(points)} точек. [SUCCESS]")
+        return points
+    except Exception as e:
+        logger.error(f"[DB][IMP:10][get_points][SELECT_DATA][Error] Ошибка получения точек: {e}. [FATAL]")
+        return []
+    # END_BLOCK_SELECT_DATA
+# END_FUNCTION_get_points
+$END_FILE lesson_20\db_manager.py
+
+$START_FILE lesson_20\handlers.py 4754
+# FILE:lesson_20/handlers.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Обработчики событий UI Gradio для Lesson 20.
+# SCOPE:Связь UI с бизнес-логикой, БД и конфигурацией.
+# INPUT:Параметры из Gradio UI.
+# OUTPUT:DataFrame для таблицы и Figure для графика.
+# KEYWORDS:[DOMAIN(8): UI; CONCEPT(7): Handlers; TECH(9): Gradio, Plotly, Pandas]
+# LINKS:[USES_API(8): pandas, plotly.graph_objects]
+# END_MODULE_CONTRACT
+#
+# START_RATIONALE:
+# Q: Почему обработчики вынесены в отдельный файл?
+# A: Это позволяет проводить Headless-тестирование логики UI без запуска сервера Gradio.
+# END_RATIONALE
+#
+# START_CHANGE_SUMMARY:
+# LAST_CHANGE: [v1.0.0 - Создание модуля обработчиков UI.]
+# END_CHANGE_SUMMARY
+#
+# START_MODULE_MAP:
+# FUNC 10[Обрабатывает генерацию точек] => handle_generate
+# FUNC 10[Обрабатывает отрисовку графика] => handle_draw
+# END_MODULE_MAP
+
+import pandas as pd
+import plotly.graph_objects as go
+import logging
+from lesson_20.config_manager import save_config
+from lesson_20.db_manager import save_points, get_points
+from lesson_20.logic import calculate_parabola
+
+logger = logging.getLogger("lesson_20")
+
+# START_FUNCTION_handle_generate
+# START_CONTRACT:
+# PURPOSE:Сохранение конфига, расчет точек и сохранение в БД.
+# INPUTS:
+# - float => a: Коэффициент a
+# - float => c: Коэффициент c
+# - float => x_min: Минимум x
+# - float => x_max: Максимум x
+# OUTPUTS:
+# - pd.DataFrame - Таблица с точками
+# KEYWORDS:[PATTERN(6): Controller]
+# COMPLEXITY_SCORE: 6
+# END_CONTRACT
+def handle_generate(a: float, c: float, x_min: float, x_max: float) -> pd.DataFrame:
+    """
+    Обрабатывает нажатие кнопки 'Generate'. Сохраняет параметры в конфиг,
+    рассчитывает точки параболы, сохраняет их в БД и возвращает DataFrame.
+    """
+    # START_BLOCK_SAVE_CONFIG: [Сохранение конфигурации]
+    config = {"a": a, "c": c, "x_min": x_min, "x_max": x_max}
+    save_config(config)
+    logger.info(f"[UI][IMP:7][handle_generate][SAVE_CONFIG][Success] Конфиг обновлен. [INFO]")
+    # END_BLOCK_SAVE_CONFIG
+    
+    # START_BLOCK_CALC_AND_DB: [Расчет и сохранение в БД]
+    points = calculate_parabola(a, c, x_min, x_max)
+    if points:
+        save_points(points)
+        logger.info(f"[UI][IMP:9][handle_generate][CALC_AND_DB][Success] Точки сохранены в БД. [VALUE]")
+    else:
+        logger.error(f"[UI][IMP:10][handle_generate][CALC_AND_DB][Error] Ошибка генерации точек. [FATAL]")
+    # END_BLOCK_CALC_AND_DB
+    
+    # START_BLOCK_RETURN_DF: [Формирование DataFrame]
+    df = pd.DataFrame(points, columns=["x", "y"])
+    return df
+    # END_BLOCK_RETURN_DF
+# END_FUNCTION_handle_generate
+
+# START_FUNCTION_handle_draw
+# START_CONTRACT:
+# PURPOSE:Загрузка точек из БД и отрисовка графика Plotly.
+# INPUTS: Нет
+# OUTPUTS:
+# - go.Figure - Объект графика Plotly
+# KEYWORDS:[PATTERN(6): Visualizer]
+# COMPLEXITY_SCORE: 5
+# END_CONTRACT
+def handle_draw() -> go.Figure:
+    """
+    Обрабатывает нажатие кнопки 'Draw Graph'. Загружает точки из БД
+    и строит график параболы с помощью Plotly.
+    """
+    # START_BLOCK_LOAD_DATA: [Загрузка данных из БД]
+    points = get_points()
+    if not points:
+        logger.warning(f"[UI][IMP:7][handle_draw][LOAD_DATA][Warning] Нет данных в БД для отрисовки. [INFO]")
+        fig = go.Figure()
+        fig.update_layout(title="No data in DB")
+        return fig
+    # END_BLOCK_LOAD_DATA
+    
+    # START_BLOCK_CREATE_PLOT: [Создание графика]
+    df = pd.DataFrame(points, columns=["x", "y"])
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df["x"], y=df["y"], mode='lines+markers', name='Parabola'))
+    fig.update_layout(
+        title="Parabola y = ax^2 + c",
+        xaxis_title="x",
+        yaxis_title="y",
+        template="plotly_white"
+    )
+    logger.info(f"[UI][IMP:9][handle_draw][CREATE_PLOT][Success] График построен по {len(points)} точкам. [VALUE]")
+    return fig
+    # END_BLOCK_CREATE_PLOT
+# END_FUNCTION_handle_draw
+$END_FILE lesson_20\handlers.py
+
+$START_FILE lesson_20\logic.py 2394
+# FILE:lesson_20/logic.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Бизнес-логика расчета точек параболы y = ax^2 + c.
+# SCOPE:Генерация списка точек (x, y) на заданном интервале.
+# INPUT:Параметры a, c, x_min, x_max.
+# OUTPUT:Список кортежей (x, y).
+# KEYWORDS:[DOMAIN(8): Mathematics; CONCEPT(7): Parabola; TECH(9): Python]
+# LINKS:[USES_API(8): math]
+# END_MODULE_CONTRACT
+#
+# START_RATIONALE:
+# Q: Почему используется 100 точек?
+# A: Этого достаточно для плавного отображения графика в Plotly.
+# END_RATIONALE
+#
+# START_CHANGE_SUMMARY:
+# LAST_CHANGE: [v1.0.0 - Создание модуля бизнес-логики.]
+# END_CHANGE_SUMMARY
+#
+# START_MODULE_MAP:
+# FUNC 10[Рассчитывает точки параболы] => calculate_parabola
+# END_MODULE_MAP
+
+import logging
+
+logger = logging.getLogger("lesson_20")
+
+# START_FUNCTION_calculate_parabola
+# START_CONTRACT:
+# PURPOSE:Генерация 100 точек параболы y = ax^2 + c.
+# INPUTS:
+# - float => a: Коэффициент a
+# - float => c: Коэффициент c
+# - float => x_min: Минимум x
+# - float => x_max: Максимум x
+# OUTPUTS:
+# - list - Список кортежей (x, y)
+# KEYWORDS:[PATTERN(6): Generator]
+# COMPLEXITY_SCORE: 5
+# END_CONTRACT
+def calculate_parabola(a: float, c: float, x_min: float, x_max: float) -> list:
+    """
+    Рассчитывает 100 точек параболы y = ax^2 + c на интервале [x_min, x_max].
+    """
+    # START_BLOCK_GENERATE_POINTS: [Генерация точек]
+    points = []
+    num_points = 100
+    
+    if x_min >= x_max:
+        logger.error(f"[Logic][IMP:10][calculate_parabola][GENERATE_POINTS][Error] x_min >= x_max: {x_min} >= {x_max}. [FATAL]")
+        return []
+        
+    step = (x_max - x_min) / (num_points - 1)
+    
+    for i in range(num_points):
+        x = x_min + i * step
+        y = a * (x ** 2) + c
+        points.append((x, y))
+        
+    logger.info(f"[Logic][IMP:9][calculate_parabola][GENERATE_POINTS][Success] Сгенерировано {len(points)} точек. [VALUE]")
+    return points
+    # END_BLOCK_GENERATE_POINTS
+# END_FUNCTION_calculate_parabola
+$END_FILE lesson_20\logic.py
+
+$START_FILE lesson_20\plans\DevelopmentPlan.md 4819
+$START_DEV_PLAN
+
+**PURPOSE:** План разработки учебного приложения Lesson 20 (Парабола y = ax^2 + c).
+
+---
+
+### 1. Draft Code Graph (Черновой Граф Кода)
+
+```xml
+<DraftCodeGraph>
+  <config_manager_py FILE="lesson_20/config_manager.py" TYPE="MODULE">
+    <annotation>Управление config.json (a, c, x_min, x_max).</annotation>
+    <load_config_FUNC NAME="load_config" TYPE="FUNCTION">
+      <annotation>Загрузка параметров из JSON.</annotation>
+    </load_config_FUNC>
+    <save_config_FUNC NAME="save_config" TYPE="FUNCTION">
+      <annotation>Сохранение параметров в JSON.</annotation>
+    </save_config_FUNC>
+  </config_manager_py>
+
+  <db_manager_py FILE="lesson_20/db_manager.py" TYPE="MODULE">
+    <annotation>Управление SQLite БД (points.db).</annotation>
+    <init_db_FUNC NAME="init_db" TYPE="FUNCTION">
+      <annotation>Создание таблицы points.</annotation>
+    </init_db_FUNC>
+    <save_points_FUNC NAME="save_points" TYPE="FUNCTION">
+      <annotation>Сохранение списка точек (x, y).</annotation>
+    </save_points_FUNC>
+    <get_points_FUNC NAME="get_points" TYPE="FUNCTION">
+      <annotation>Получение всех точек из БД.</annotation>
+    </get_points_FUNC>
+  </db_manager_py>
+
+  <logic_py FILE="lesson_20/logic.py" TYPE="MODULE">
+    <annotation>Бизнес-логика расчета параболы.</annotation>
+    <calculate_parabola_FUNC NAME="calculate_parabola" TYPE="FUNCTION">
+      <annotation>Генерация точек y = ax^2 + c.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </calculate_parabola_FUNC>
+  </logic_py>
+
+  <handlers_py FILE="lesson_20/handlers.py" TYPE="MODULE">
+    <annotation>Обработчики UI Gradio.</annotation>
+    <handle_generate_FUNC NAME="handle_generate" TYPE="FUNCTION">
+      <annotation>Сохраняет конфиг, считает точки, пишет в БД, возвращает DataFrame.</annotation>
+      <CrossLinks>
+        <Link TARGET="config_manager_py_save_config_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="logic_py_calculate_parabola_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_generate_FUNC>
+    <handle_draw_FUNC NAME="handle_draw" TYPE="FUNCTION">
+      <annotation>Читает БД, строит Plotly Figure.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_py_get_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_draw_FUNC>
+  </handlers_py>
+
+  <app_py FILE="lesson_20/app.py" TYPE="MODULE">
+    <annotation>Определение интерфейса Gradio.</annotation>
+  </app_py>
+
+  <run_lesson_20_py FILE="run_lesson_20.py" TYPE="ENTRY_POINT">
+    <annotation>Точка запуска сервера Gradio.</annotation>
+  </run_lesson_20_py>
+</DraftCodeGraph>
+```
+
+---
+
+### 2. Step-by-step Data Flow (Пошаговый Поток Данных)
+
+1.  **Инициализация:** При запуске `run_lesson_20.py` инициализируется БД через `db_manager.init_db()`.
+2.  **Ввод данных:** Пользователь меняет `a`, `c`, `x_min`, `x_max` в Gradio.
+3.  **Генерация (Кнопка 1):**
+    *   `handle_generate` вызывает `save_config` для обновления `config.json`.
+    *   `calculate_parabola` генерирует 100 точек (равномерно по x_min..x_max).
+    *   Точки сохраняются в `points.db`.
+    *   Возвращается `pandas.DataFrame` для отображения в таблице.
+4.  **Визуализация (Кнопка 2):**
+    *   `handle_draw` запрашивает данные из `db_manager.get_points()`.
+    *   Создается `plotly.graph_objects.Figure`.
+    *   График отображается в правой колонке.
+
+---
+
+### 3. Acceptance Criteria (Критерии Приемки)
+
+- [ ] **Критерий 1:** Все файлы содержат семантическую разметку (CONTRACT, MODULE_MAP, LDD логи).
+- [ ] **Критерий 2:** Логи пишутся в `lesson_20/app_20.log` с использованием `[IMP:1-10]`.
+- [ ] **Критерий 3:** Тест `test_backend.py` проверяет расчет и БД, выводя логи `IMP:7-10`.
+- [ ] **Критерий 4:** Тест `test_ui.py` проверяет `handle_generate` и `handle_draw` (Headless).
+- [ ] **Критерий 5:** Создан локальный `lesson_20/AppGraph.xml`.
+
+$END_DEV_PLAN
+$END_FILE lesson_20\plans\DevelopmentPlan.md
+
+$START_FILE lesson_20\tests\conftest.py 2568
+# FILE:lesson_20/tests/conftest.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Конфигурация pytest и Anti-Loop Protocol для Lesson 20.
+# SCOPE:Управление счетчиком попыток и настройка логирования.
+# KEYWORDS:[DOMAIN(8): Testing; CONCEPT(7): AntiLoop; TECH(9): Pytest]
+# END_MODULE_CONTRACT
+
+import pytest
+import json
+import os
+import logging
+
+COUNTER_FILE = ".test_counter_20.json"
+
+# START_FUNCTION_pytest_sessionstart
+def pytest_sessionstart(session):
+    """
+    Инициализация сессии: загрузка счетчика попыток.
+    """
+    if os.path.exists(COUNTER_FILE):
+        with open(COUNTER_FILE, 'r') as f:
+            data = json.load(f)
+            count = data.get("count", 0) + 1
+    else:
+        count = 1
+    
+    with open(COUNTER_FILE, 'w') as f:
+        json.dump({"count": count}, f)
+    
+    print(f"\n[ANTI-LOOP] Попытка запуска тестов №{count}")
+    
+    if count >= 1:
+        print("\n--- CHECKLIST ---")
+        print("- Проверка путей и использование tmp_path.")
+        print("- Проверка импортов (Native Import).")
+        print("- Соответствие версий библиотек через test_lib.py.")
+        print("- Наличие необходимых файлов данных/конфигов.")
+    
+    if count == 3:
+        print("\n[ADVICE] Используйте MCP tavily или Context 7 для поиска решения.")
+    elif count == 4:
+        print("\n[WARNING] Риск зацикливания! Проведите рефлексию стратегии.")
+    elif count >= 5:
+        print("\n[CRITICAL] Обнаружено зацикливание! ОСТАНОВИТЕСЬ и сформируйте запрос на помощь.")
+
+# START_FUNCTION_pytest_sessionfinish
+def pytest_sessionfinish(session, exitstatus):
+    """
+    Завершение сессии: сброс счетчика при успехе.
+    """
+    if exitstatus == 0:
+        if os.path.exists(COUNTER_FILE):
+            os.remove(COUNTER_FILE)
+        print("\n[ANTI-LOOP] Тесты пройдены! Счетчик сброшен.")
+
+@pytest.fixture(autouse=True)
+def setup_logging(caplog):
+    """
+    Автоматическая настройка уровня логирования для каждого теста.
+    """
+    caplog.set_level(logging.DEBUG, logger="lesson_20")
+$END_FILE lesson_20\tests\conftest.py
+
+$START_FILE lesson_20\tests\test_backend.py 4214
+# FILE:lesson_20/tests/test_backend.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Тестирование бэкенд-логики Lesson 20 (Logic, Config, DB).
+# SCOPE:Проверка расчета параболы, сохранения конфига и работы с БД.
+# KEYWORDS:[DOMAIN(8): Testing; CONCEPT(7): Backend; TECH(9): Pytest, LDD]
+# END_MODULE_CONTRACT
+
+import os
+import pytest
+import pandas as pd
+from lesson_20.logic import calculate_parabola
+from lesson_20.config_manager import load_config, save_config
+from lesson_20.db_manager import init_db, save_points, get_points
+
+# START_FUNCTION_test_logic_calculation
+# START_CONTRACT:
+# PURPOSE:Проверка корректности расчета точек параболы.
+# INPUTS: caplog
+# OUTPUTS: None
+# KEYWORDS:[PATTERN(7): LDD; CONCEPT(8): Telemetry]
+# COMPLEXITY_SCORE: 5
+# END_CONTRACT
+def test_logic_calculation(caplog):
+    """
+    Тест проверяет, что функция calculate_parabola генерирует 100 точек
+    и корректно рассчитывает y для x=0.
+    """
+    # START_BLOCK_EXECUTION: [Вызов логики]
+    a, c = 2.0, 5.0
+    points = calculate_parabola(a, c, -10, 10)
+    # END_BLOCK_EXECUTION
+
+    # START_BLOCK_LDD_TELEMETRY: [Вывод траектории]
+    print("\n--- LDD ТРАЕКТОРИЯ (IMP:7-10) ---")
+    for record in caplog.records:
+        if "[IMP:" in record.message:
+            try:
+                imp_level = int(record.message.split("[IMP:")[1].split("]")[0])
+                if imp_level >= 7:
+                    print(record.message)
+            except: continue
+    # END_BLOCK_LDD_TELEMETRY
+
+    # START_BLOCK_VERIFICATION: [Проверки]
+    assert len(points) == 100, "Должно быть сгенерировано 100 точек"
+    # Находим точку x=0 (или ближайшую)
+    df = pd.DataFrame(points, columns=["x", "y"])
+    y_at_zero = df.iloc[49:51]["y"].mean() # Приблизительно для 100 точек от -10 до 10
+    assert abs(y_at_zero - c) < 1.0, f"Для x=0 y должен быть близок к c={c}"
+    # END_BLOCK_VERIFICATION
+# END_FUNCTION_test_logic_calculation
+
+# START_FUNCTION_test_config_manager
+# START_CONTRACT:
+# PURPOSE:Проверка сохранения и загрузки конфигурации.
+# INPUTS: tmp_path, caplog
+# END_CONTRACT
+def test_config_manager(tmp_path, caplog):
+    """
+    Тест проверяет сохранение и загрузку конфига во временной папке.
+    """
+    config_file = tmp_path / "test_config.json"
+    test_data = {"a": 5.0, "c": 10.0, "x_min": -5.0, "x_max": 5.0}
+    
+    # START_BLOCK_EXECUTION: [Сохранение и загрузка]
+    save_config(test_data, str(config_file))
+    loaded_data = load_config(str(config_file))
+    # END_BLOCK_EXECUTION
+
+    # START_BLOCK_VERIFICATION: [Проверки]
+    assert loaded_data == test_data, "Загруженные данные должны совпадать с сохраненными"
+    # END_BLOCK_VERIFICATION
+# END_FUNCTION_test_config_manager
+
+# START_FUNCTION_test_db_manager
+# START_CONTRACT:
+# PURPOSE:Проверка инициализации и работы с БД.
+# INPUTS: tmp_path, caplog
+# END_CONTRACT
+def test_db_manager(tmp_path, caplog):
+    """
+    Тест проверяет инициализацию БД, сохранение и получение точек.
+    """
+    db_file = tmp_path / "test_points.db"
+    test_points = [(0.0, 0.0), (1.0, 1.0), (2.0, 4.0)]
+    
+    # START_BLOCK_EXECUTION: [Работа с БД]
+    init_db(str(db_file))
+    save_points(test_points, str(db_file))
+    loaded_points = get_points(str(db_file))
+    # END_BLOCK_EXECUTION
+
+    # START_BLOCK_VERIFICATION: [Проверки]
+    assert len(loaded_points) == 3, "Должно быть загружено 3 точки"
+    assert loaded_points[1] == (1.0, 1.0), "Данные точки должны совпадать"
+    # END_BLOCK_VERIFICATION
+# END_FUNCTION_test_db_manager
+$END_FILE lesson_20\tests\test_backend.py
+
+$START_FILE lesson_20\tests\test_ui.py 3630
+# FILE:lesson_20/tests/test_ui.py
+# VERSION:1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE:Тестирование UI-обработчиков Lesson 20 (Headless).
+# SCOPE:Проверка handle_generate и handle_draw без запуска Gradio.
+# KEYWORDS:[DOMAIN(8): Testing; CONCEPT(7): UI; TECH(9): Pytest, LDD]
+# END_MODULE_CONTRACT
+
+import os
+import pytest
+import pandas as pd
+import plotly.graph_objects as go
+from lesson_20.handlers import handle_generate, handle_draw
+from lesson_20.db_manager import init_db
+
+# START_FUNCTION_test_ui_handlers
+# START_CONTRACT:
+# PURPOSE:Проверка работы обработчиков UI.
+# INPUTS: tmp_path, caplog
+# OUTPUTS: None
+# KEYWORDS:[PATTERN(7): LDD; CONCEPT(8): Telemetry]
+# COMPLEXITY_SCORE: 6
+# END_CONTRACT
+def test_ui_handlers(tmp_path, caplog):
+    """
+    Тест проверяет, что handle_generate возвращает DataFrame,
+    а handle_draw возвращает Figure Plotly.
+    """
+    # START_BLOCK_SETUP: [Настройка окружения]
+    db_file = tmp_path / "test_ui.db"
+    config_file = tmp_path / "test_ui_config.json"
+    
+    # Мокаем пути в менеджерах (через monkeypatch)
+    import lesson_20.db_manager
+    import lesson_20.config_manager
+    import lesson_20.handlers
+    
+    # Переопределяем пути по умолчанию для тестов
+    lesson_20.db_manager.init_db(str(db_file))
+    # END_BLOCK_SETUP
+
+    # START_BLOCK_EXECUTION_GENERATE: [Вызов handle_generate]
+    # ВАЖНО: Мы не можем легко замокать пути внутри handlers.py без патчинга,
+    # поэтому в тестах UI мы полагаемся на то, что handlers используют дефолтные пути,
+    # но для чистоты теста мы можем пропатчить функции сохранения.
+    
+    # Для простоты теста в рамках урока, мы просто вызовем обработчики,
+    # зная что они создадут файлы в lesson_20/ (или мы их переопределим).
+    # Но правильнее использовать monkeypatch для путей.
+    
+    from unittest.mock import patch
+    with patch("lesson_20.handlers.save_config"), \
+         patch("lesson_20.handlers.save_points"), \
+         patch("lesson_20.handlers.get_points") as mock_get:
+        
+        mock_get.return_value = [(0.0, 0.0), (1.0, 1.0)]
+        
+        df = handle_generate(a=1.0, c=0.0, x_min=-5, x_max=5)
+        fig = handle_draw()
+        
+        # START_BLOCK_LDD_TELEMETRY: [Вывод траектории]
+        print("\n--- LDD ТРАЕКТОРИЯ (IMP:7-10) ---")
+        for record in caplog.records:
+            if "[IMP:" in record.message:
+                try:
+                    imp_level = int(record.message.split("[IMP:")[1].split("]")[0])
+                    if imp_level >= 7:
+                        print(record.message)
+                except: continue
+        # END_BLOCK_LDD_TELEMETRY
+
+        # START_BLOCK_VERIFICATION: [Проверки]
+        assert isinstance(df, pd.DataFrame), "handle_generate должен возвращать DataFrame"
+        assert not df.empty, "DataFrame не должен быть пустым"
+        assert isinstance(fig, go.Figure), "handle_draw должен возвращать Figure"
+        # END_BLOCK_VERIFICATION
+    # END_BLOCK_EXECUTION_GENERATE
+# END_FUNCTION_test_ui_handlers
+$END_FILE lesson_20\tests\test_ui.py
+
