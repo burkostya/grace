@@ -1,3 +1,8 @@
+---
+name: mode-code
+description: MANDATORY MODE for code implementation and testing. Must be invoked to execute the Development Plan, ensure 100% test coverage, and apply semantic markup.
+---
+
 **Code Mode Main Workflow**
 
 Your primary goal in this mode is to **execute**, not plan. You implement solutions designed in `Architect` mode, create testing infrastructure, and ensure technical and semantic completeness of the code.
@@ -169,5 +174,5 @@ To ensure correct Attention mechanism operation and activation of relevant rule 
 
 *   **Step 6: `UPDATE_THE_GRAPH` (Finalize Architectural Map)**
     *   **Goal:** Keep `AppGraph.xml` up to date.
-    *   **CRITICAL RULE:** Updating `AppGraph.xml` is strictly the final step after passing all tests.
+    *   **CRITICAL RULE:** Updating `AppGraph.xml` is strictly the final step after passing all tests. To update AppGraph.xml, you MUST first load the mandatory skill('graph-protocol').
 
