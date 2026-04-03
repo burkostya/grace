@@ -1,0 +1,75 @@
+<KnowledgeGraph>
+  <Lesson_23_Parabola_Generator_1_0_0_Info TYPE="PROJECT_INFO">
+    <keywords>Parabola, Gradio, SQLite, LDD 2.0, Semantic Exoskeleton</keywords>
+    <annotation>Educational application demonstrating parabola generation, persistence, and Agentic UX standards.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="DataGeneration">User -> Adjust Parameters &amp; Generate -> Config Updated, Points Calculated, Points Saved to DB, Table Displayed</Scenario>
+      <Scenario NAME="GraphVisualization">User -> Draw Graph -> Data Loaded from DB, Plotly Figure Generated and Displayed</Scenario>
+    </BusinessScenarios>
+  </Lesson_23_Parabola_Generator_1_0_0_Info>
+
+  <config_manager_py FILE="lesson_23/config_manager.py" TYPE="BACKEND_COMPONENT">
+    <annotation>Manages application configuration in config.json.</annotation>
+    <ConfigManager_CLASS NAME="ConfigManager" TYPE="IS_CLASS_OF_MODULE">
+      <load_config_METHOD NAME="load_config" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Loads settings from JSON or returns defaults.</annotation>
+      </load_config_METHOD>
+      <save_config_METHOD NAME="save_config" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Persists settings to JSON.</annotation>
+      </save_config_METHOD>
+    </ConfigManager_CLASS>
+  </config_manager_py>
+
+  <db_manager_py FILE="lesson_23/db_manager.py" TYPE="BACKEND_COMPONENT">
+    <annotation>Manages parabola data in SQLite.</annotation>
+    <DBManager_CLASS NAME="DBManager" TYPE="IS_CLASS_OF_MODULE">
+      <init_db_METHOD NAME="init_db" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Ensures table existence.</annotation>
+      </init_db_METHOD>
+      <save_points_METHOD NAME="save_points" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Transactional delete and insert of coordinates.</annotation>
+      </save_points_METHOD>
+      <get_points_METHOD NAME="get_points" TYPE="IS_METHOD_OF_CLASS">
+        <annotation>Retrieves all coordinates as a pandas DataFrame.</annotation>
+      </get_points_METHOD>
+    </DBManager_CLASS>
+  </db_manager_py>
+
+  <parabola_engine_py FILE="lesson_23/parabola_engine.py" TYPE="BACKEND_COMPONENT">
+    <annotation>Pure math logic for parabola calculation.</annotation>
+    <calculate_parabola_FUNC NAME="calculate_parabola" TYPE="IS_FUNCTION_OF_MODULE">
+      <annotation>Calculates y = ax^2 + c for a given range.</annotation>
+    </calculate_parabola_FUNC>
+  </parabola_engine_py>
+
+  <app_logic_py FILE="lesson_23/app_logic.py" TYPE="BACKEND_CONTROLLER">
+    <annotation>Orchestrates UI events and backend services.</annotation>
+    <handle_generate_data_FUNC NAME="handle_generate_data" TYPE="IS_FUNCTION_OF_MODULE">
+      <annotation>Coordinates config save, calculation, and DB storage.</annotation>
+      <CrossLinks>
+        <Link TARGET="config_manager_py_ConfigManager_save_config_METHOD" TYPE="CALLS_METHOD" />
+        <Link TARGET="parabola_engine_py_calculate_parabola_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="db_manager_py_DBManager_save_points_METHOD" TYPE="CALLS_METHOD" />
+      </CrossLinks>
+    </handle_generate_data_FUNC>
+    <handle_draw_graph_FUNC NAME="handle_draw_graph" TYPE="IS_FUNCTION_OF_MODULE">
+      <annotation>Builds Plotly Figure from DB data.</annotation>
+      <CrossLinks>
+        <Link TARGET="db_manager_py_DBManager_get_points_METHOD" TYPE="CALLS_METHOD" />
+      </CrossLinks>
+    </handle_draw_graph_FUNC>
+  </app_logic_py>
+
+  <run_lesson_23_py FILE="run_lesson_23.py" TYPE="UI_ENTRY_POINT">
+    <annotation>Gradio UI launcher and main entry point.</annotation>
+    <CrossLinks>
+      <Link TARGET="app_logic_py_handle_generate_data_FUNC" TYPE="CALLS_FUNCTION" />
+      <Link TARGET="app_logic_py_handle_draw_graph_FUNC" TYPE="CALLS_FUNCTION" />
+    </CrossLinks>
+  </run_lesson_23_py>
+
+  <Lesson23_CrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link TARGET="run_lesson_23_py" TYPE="ORCHESTRATES_FLOW" />
+    <Link TARGET="app_logic_py" TYPE="PROVIDES_HANDLERS" />
+  </Lesson23_CrossLinks>
+</KnowledgeGraph>
