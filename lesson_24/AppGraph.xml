@@ -1,0 +1,78 @@
+<KnowledgeGraph>
+  <Lesson_24_Parabola_Framework_1_0_0_Info TYPE="PROJECT_INFO">
+    <keywords>Parabola, SQLite, Gradio, Plotly, LDD_2.0, SemanticMarkup</keywords>
+    <annotation>Educational application demonstrating prompt framework standards for parabola calculation and visualization.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="GenerateData">User -> Inputs Params -> save_config -> calculate_parabola -> save_points -> Show Table</Scenario>
+      <Scenario NAME="DrawGraph">User -> Click Draw -> get_points -> Render Plotly Figure -> Show Plot</Scenario>
+    </BusinessScenarios>
+  </Lesson_24_Parabola_Framework_1_0_0_Info>
+
+  <lesson_24_config_manager_py FILE="lesson_24/config_manager.py" TYPE="STATE_MANAGEMENT_MODULE">
+    <annotation>Manages application state via config.json.</annotation>
+    <load_config_FUNC NAME="load_config" TYPE="IO_OPERATION">
+      <annotation>Reads JSON config with fallback to defaults.</annotation>
+    </load_config_FUNC>
+    <save_config_FUNC NAME="save_config" TYPE="IO_OPERATION">
+      <annotation>Writes JSON config to file.</annotation>
+    </save_config_FUNC>
+  </lesson_24_config_manager_py>
+
+  <lesson_24_db_manager_py FILE="lesson_24/db_manager.py" TYPE="DATABASE_MODULE">
+    <annotation>Handles SQLite persistence for parabola points.</annotation>
+    <init_db_FUNC NAME="init_db" TYPE="DB_SETUP">
+      <annotation>Creates table schema.</annotation>
+    </init_db_FUNC>
+    <save_points_FUNC NAME="save_points" TYPE="DB_WRITE">
+      <annotation>Clears old data and bulk inserts new points.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_24_db_manager_py_init_db_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </save_points_FUNC>
+    <get_points_FUNC NAME="get_points" TYPE="DB_READ">
+      <annotation>Reads points as Pandas DataFrame.</annotation>
+      <CrossLinks>
+        <Link TARGET="lesson_24_db_manager_py_init_db_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </get_points_FUNC>
+  </lesson_24_db_manager_py>
+
+  <lesson_24_logic_py FILE="lesson_24/logic.py" TYPE="BUSINESS_LOGIC_MODULE">
+    <annotation>Mathematical engine for parabola calculations.</annotation>
+    <calculate_parabola_FUNC NAME="calculate_parabola" TYPE="MATH_CALCULATION">
+      <annotation>Computes y = ax^2 + c using NumPy.</annotation>
+    </calculate_parabola_FUNC>
+  </lesson_24_logic_py>
+
+  <lesson_24_ui_controller_py FILE="lesson_24/ui_controller.py" TYPE="UI_CONTROLLER_MODULE">
+    <annotation>Bridge between Gradio UI and backend services.</annotation>
+    <handle_generate_data_FUNC NAME="handle_generate_data" TYPE="UI_HANDLER">
+      <CrossLinks>
+        <Link TARGET="lesson_24_config_manager_py_save_config_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="lesson_24_logic_py_calculate_parabola_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="lesson_24_db_manager_py_save_points_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="lesson_24_db_manager_py_get_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_generate_data_FUNC>
+    <handle_draw_graph_FUNC NAME="handle_draw_graph" TYPE="UI_HANDLER">
+      <CrossLinks>
+        <Link TARGET="lesson_24_db_manager_py_get_points_FUNC" TYPE="CALLS_FUNCTION" />
+      </CrossLinks>
+    </handle_draw_graph_FUNC>
+  </lesson_24_ui_controller_py>
+
+  <run_lesson_24_py FILE="run_lesson_24.py" TYPE="ENTRY_POINT">
+    <annotation>Application launcher using Gradio Blocks.</annotation>
+    <main_FUNC NAME="main" TYPE="APP_LAUNCHER">
+      <CrossLinks>
+        <Link TARGET="lesson_24_ui_controller_py_handle_generate_data_FUNC" TYPE="BINDS_TO_UI_EVENT" />
+        <Link TARGET="lesson_24_ui_controller_py_handle_draw_graph_FUNC" TYPE="BINDS_TO_UI_EVENT" />
+      </CrossLinks>
+    </main_FUNC>
+  </run_lesson_24_py>
+
+  <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+    <Link TARGET="lesson_24_ui_controller_py" TYPE="ORCHESTRATES_FLOW" />
+    <Link TARGET="lesson_24_db_manager_py" TYPE="PROVIDES_PERSISTENCE" />
+  </ProjectCrossLinks>
+</KnowledgeGraph>

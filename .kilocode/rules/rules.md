@@ -191,4 +191,105 @@ def [FunctionName](...):
     return [Result]
 # END_FUNCTION_[FunctionName]
 
+
+=== ONE-SHOT EXAMPLE (Library Check) ===
+
+# FILE: tools/check_ai_libs.py
+# VERSION: 1.0.0
+# START_MODULE_CONTRACT:
+# PURPOSE: Verification of target AI-efficient libraries presence in the environment.
+# SCOPE: System environment introspection, dependency checking.
+# INPUT: None (works with current Python environment).
+# OUTPUT: Dictionary with installation statuses of requested modules.
+# KEYWORDS:[DOMAIN(8): Environment; CONCEPT(7): DependencyCheck; TECH(9): PythonImport]
+# LINKS:[USES_API(8): importlib]
+# END_MODULE_CONTRACT
+#
+# START_INVARIANTS:
+# - check_all_libraries ALWAYS returns a dictionary.
+# - Dictionary ALWAYS contains all target libraries as keys.
+# END_INVARIANTS
+#
+# START_RATIONALE:
+# Q: Why use importlib.util.find_spec instead of direct import statements?
+# A: Direct import (import numpy) triggers ImportError and halts the script on the first missing library. find_spec allows safe collection of the full environment picture.
+# END_RATIONALE
+#
+# START_CHANGE_SUMMARY:
+# LAST_CHANGE: [v1.0.0 - Initial creation of system and ML library verification module.]
+# END_CHANGE_SUMMARY
+#
+# START_MODULE_MAP:
+# FUNC 10[Checks presence of target AI libraries in the environment] => check_all_libraries
+# END_MODULE_MAP
+#
+# START_USE_CASES:
+# -[check_all_libraries]: System (Startup) -> VerifyEnvironmentDependencies -> EnvironmentStatusReported
+# END_USE_CASES
+
+import logging
+import importlib.util
+
+logger = logging.getLogger(__name__)
+
+# START_FUNCTION_check_all_libraries
+# START_CONTRACT:
+# PURPOSE: Iterates through system and ML libraries lists, checking availability.
+# INPUTS: None
+# OUTPUTS: 
+# - dict - Dictionary where key is library name (str), value is install status (bool)
+# SIDE_EFFECTS: None.
+# KEYWORDS:[PATTERN(6): Iterator; CONCEPT(8): Introspection]
+# LINKS:[USES_API(8): importlib.util]
+# COMPLEXITY_SCORE: 5[Medium complexity due to iteration and exception handling.]
+# END_CONTRACT
+def check_all_libraries() -> dict:
+    """
+    Function performs introspection of the current Python environment to find pre-installed libraries.
+    It uses importlib for safe package presence verification without actual memory loading,
+    preventing side effects and import errors. Result is returned as a dictionary for
+    subsequent ML readiness analysis.
+    """
+    
+    # START_BLOCK_INITIALIZE_LISTS: [Generating target libraries lists]
+    system_libs =[
+        "math", "random", "statistics", "decimal", "datetime", "time", "re", 
+        "os", "sys", "csv", "json", "sqlite3", "xml.etree.ElementTree", 
+        "configparser", "pickle", "base64", "hashlib", "collections", 
+        "itertools", "functools", "logging", "argparse", "typing", "uuid", 
+        "zipfile", "tarfile", "gzip", "zlib", "shutil", "tempfile"
+    ]
+    ml_libs =[
+        "numpy", "pandas", "scipy", "sklearn", "matplotlib", "seaborn", 
+        "h5py", "openpyxl", "requests", "lxml", "PIL", "reportlab", 
+        "sympy", "dateutil", "pytz"
+    ]
+    all_libs = system_libs + ml_libs
+    result_map = {}
+    
+    logger.debug(f"[VarCheck][IMP:4][check_all_libraries][INITIALIZE_LISTS][Params] Lists initialized. Total libraries: {len(all_libs)} [INFO]")
+    # END_BLOCK_INITIALIZE_LISTS
+    
+    # START_BLOCK_VERIFY_DEPENDENCIES: [Iteration and safe import spec checking]
+    for lib_name in all_libs:
+        try:
+            spec = importlib.util.find_spec(lib_name)
+            is_installed = spec is not None
+            result_map[lib_name] = is_installed
+            
+            logger.debug(f"[LibCheck][IMP:3][check_all_libraries][VERIFY_DEPENDENCIES][ConditionCheck] Package {lib_name} found: {is_installed}[{'SUCCESS' if is_installed else 'FAIL'}]")
+        except Exception as e:
+            # BUG_FIX_CONTEXT: Previously caught ImportError, but find_spec can throw ValueError on malformed paths. Expanded to Exception.
+            result_map[lib_name] = False
+            logger.critical(f"[SystemError][IMP:10][check_all_libraries][VERIFY_DEPENDENCIES][ExceptionEnrichment] Failure searching for {lib_name}. Local vars: lib_name={lib_name}. Err: {e} [FATAL]")
+    # END_BLOCK_VERIFY_DEPENDENCIES
+
+    # START_BLOCK_RETURN_RESULTS:[Summary and return]
+    installed_count = sum(result_map.values())
+    logger.info(f"[BeliefState][IMP:9][check_all_libraries][RETURN_RESULTS][ReturnData] Installed {installed_count} out of {len(all_libs)} libraries. [VALUE]")
+    
+    return result_map
+    # END_BLOCK_RETURN_RESULTS
+# END_FUNCTION_check_all_libraries
+
 $END_MODIFICATION_AND_GENERATION
