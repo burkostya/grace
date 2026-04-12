@@ -1,0 +1,60 @@
+<KnowledgeGraph>
+  <lesson_25_Parabola_Generator_1_0_0_Info TYPE="PROJECT_INFO">
+    <keywords>Parabola, Gradio, SQLite, LDD, AgenticUX</keywords>
+    <annotation>Educational lesson demonstrating y=ax^2+c generator with layer isolation and semantic markup.</annotation>
+    <BusinessScenarios>
+      <Scenario NAME="GenerateData">User -> Input Parameters -> Persistence & Table View</Scenario>
+      <Scenario NAME="DrawGraph">User -> Fetch from DB -> Plotly Visualization</Scenario>
+    </BusinessScenarios>
+  </lesson_25_Parabola_Generator_1_0_0_Info>
+
+  <config_manager_py FILE="lesson_25/config_manager.py" TYPE="BACKEND_MODULE">
+    <ConfigManager_CLASS NAME="ConfigManager" TYPE="STATE_MANAGEMENT">
+      <load_config_METHOD NAME="load_config" TYPE="IO_OPERATION">
+        <annotation>Loads config.json or defaults.</annotation>
+      </load_config_METHOD>
+      <save_config_METHOD NAME="save_config" TYPE="IO_OPERATION">
+        <annotation>Persists dict to config.json.</annotation>
+      </save_config_METHOD>
+    </ConfigManager_CLASS>
+  </config_manager_py>
+
+  <db_manager_py FILE="lesson_25/db_manager.py" TYPE="BACKEND_MODULE">
+    <DBManager_CLASS NAME="DBManager" TYPE="DATABASE_MANAGEMENT">
+      <save_points_METHOD NAME="save_points" TYPE="SQL_PERSISTENCE">
+        <annotation>Clears and inserts points into SQLite.</annotation>
+      </save_points_METHOD>
+      <get_points_METHOD NAME="get_points" TYPE="SQL_RETRIEVAL">
+        <annotation>Reads points from SQLite.</annotation>
+      </get_points_METHOD>
+    </DBManager_CLASS>
+  </db_manager_py>
+
+  <generator_py FILE="lesson_25/generator.py" TYPE="BACKEND_MODULE">
+    <generate_parabola_points_FUNC NAME="generate_parabola_points" TYPE="BUSINESS_LOGIC">
+      <annotation>Mathematical generation of y=ax^2+c.</annotation>
+    </generate_parabola_points_FUNC>
+  </generator_py>
+
+  <ui_controller_py FILE="lesson_25/ui_controller.py" TYPE="CONTROLLER_MODULE">
+    <handle_generate_FUNC NAME="handle_generate" TYPE="UI_CONTROLLER">
+      <CrossLinks>
+        <Link TARGET="config_manager_py_ConfigManager_CLASS_save_config_METHOD" TYPE="CALLS_METHOD" />
+        <Link TARGET="generator_py_generate_parabola_points_FUNC" TYPE="CALLS_FUNCTION" />
+        <Link TARGET="db_manager_py_DBManager_CLASS_save_points_METHOD" TYPE="CALLS_METHOD" />
+      </CrossLinks>
+    </handle_generate_FUNC>
+    <handle_draw_FUNC NAME="handle_draw" TYPE="UI_CONTROLLER">
+      <CrossLinks>
+        <Link TARGET="db_manager_py_DBManager_CLASS_get_points_METHOD" TYPE="CALLS_METHOD" />
+      </CrossLinks>
+    </handle_draw_FUNC>
+  </ui_controller_py>
+
+  <run_lesson_25_py FILE="run_lesson_25.py" TYPE="ENTRY_POINT">
+    <annotation>Gradio launcher for Lesson 25.</annotation>
+    <CrossLinks>
+        <Link TARGET="ui_controller_py" TYPE="ORCHESTRATES_FLOW" />
+    </CrossLinks>
+  </run_lesson_25_py>
+</KnowledgeGraph>
