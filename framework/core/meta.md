@@ -16,6 +16,7 @@ This file defines the meta-rules for agents interacting with the framework direc
    - `GFPF_SEMANTIC_EXOSKELETON`
    - `GFPF_ZERO_CONTEXT_SURVIVAL`
    - `GFPF_SPATIAL_NAVIGATION`
+   - `GFPF_LOG_DRIVEN_DEVELOPMENT`
 </naming-convention>
 
 <agent-directives>

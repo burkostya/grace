@@ -24,4 +24,9 @@ last_updated: 2026-04-23
 * **Description:** [GFPF_SPATIAL_NAVIGATION.description.md](./GFPF_SPATIAL_NAVIGATION.description.md) - Rationale and theory of treating code as an XML-DOM to optimize LLM attention mechanisms.
 * **Instructions:** [GFPF_SPATIAL_NAVIGATION.instructions.md](./GFPF_SPATIAL_NAVIGATION.instructions.md) - Executable rules for spatial markup, block segmentation (Complexity > 7), safe editing (anchoring), and log-based navigation.
 * **FPF Mapping:** [GFPF_SPATIAL_NAVIGATION.fpf.md](./GFPF_SPATIAL_NAVIGATION.fpf.md) - First Principles derivation (Context Algebra/U.Scope, U.WorkScope, and E/E-LOG traceability).
+
+## GFPF_LOG_DRIVEN_DEVELOPMENT
+* **Description:** [GFPF_LOG_DRIVEN_DEVELOPMENT.description.md](./GFPF_LOG_DRIVEN_DEVELOPMENT.description.md) - Rationale and theory of using logs as a transport layer for agent context and AI Belief State.
+* **Instructions:** [GFPF_LOG_DRIVEN_DEVELOPMENT.instructions.md](./GFPF_LOG_DRIVEN_DEVELOPMENT.instructions.md) - Executable rules for strict log formatting, IMP scaling, Exception Enrichment, and native LDD pytest.
+* **FPF Mapping:** [GFPF_LOG_DRIVEN_DEVELOPMENT.fpf.md](./GFPF_LOG_DRIVEN_DEVELOPMENT.fpf.md) - First Principles derivation (U.Method vs U.Work, Evidence Graph, Bounded Contexts, CSLC, and Abductive Loop).
 </registry>
