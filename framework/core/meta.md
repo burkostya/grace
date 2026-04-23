@@ -1,6 +1,6 @@
 ---
 type: meta_protocol
-version: 1.1
+version: 1.2
 ---
 # GFPF (GRACE First Principles Framework) Framework Meta-Protocol
 
@@ -14,6 +14,7 @@ This file defines the meta-rules for agents interacting with the framework direc
 3. Examples: 
    - `GFPF_SUPERPOS_COLLAPSE`
    - `GFPF_SEMANTIC_EXOSKELETON`
+   - `GFPF_ZERO_CONTEXT_SURVIVAL`
 </naming-convention>
 
 <agent-directives>

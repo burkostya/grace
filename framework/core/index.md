@@ -14,4 +14,9 @@ last_updated: 2026-04-23
 * **Description:** [GFPF_SEMANTIC_EXOSKELETON.description.md](./GFPF_SEMANTIC_EXOSKELETON.description.md) - Rationale and theory behind XML-DOM spatial navigation and code containment.
 * **Instructions:** [GFPF_SEMANTIC_EXOSKELETON.instructions.md](./GFPF_SEMANTIC_EXOSKELETON.instructions.md) - Executable rules for block segmentation and tag editing invariants.
 * **FPF Mapping:** [GFPF_SEMANTIC_EXOSKELETON.fpf.md](./GFPF_SEMANTIC_EXOSKELETON.fpf.md) - First Principles derivation (Context Algebra, U.Scope, and Role-Method-Work Alignment).
+
+## GFPF_ZERO_CONTEXT_SURVIVAL
+* **Description:** [GFPF_ZERO_CONTEXT_SURVIVAL.description.md](./GFPF_ZERO_CONTEXT_SURVIVAL.description.md) - Rationale and theory of self-sufficient modules, SFT-priming, and mitigating context burnout.
+* **Instructions:** [GFPF_ZERO_CONTEXT_SURVIVAL.instructions.md](./GFPF_ZERO_CONTEXT_SURVIVAL.instructions.md) - Executable rules for explicit contracts, semantic enrichment, and bug-fix traceability.
+* **FPF Mapping:** [GFPF_ZERO_CONTEXT_SURVIVAL.fpf.md](./GFPF_ZERO_CONTEXT_SURVIVAL.fpf.md) - First Principles derivation (Role-Method-Work Alignment, Context Algebra, and Evidence Management).
 </registry>
