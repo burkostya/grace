@@ -1,6 +1,6 @@
 ---
 type: meta_protocol
-version: 1.0
+version: 1.1
 ---
 # GFPF (GRACE First Principles Framework) Framework Meta-Protocol
 
@@ -11,7 +11,9 @@ This file defines the meta-rules for agents interacting with the framework direc
 <naming-convention>
 1. All core techniques MUST start with `GFPF_` (GRACE First Principles Framework).
 2. Followed by short, LLM-descriptive tokens in SNAKE_CASE and CAPITALS.
-3. Example: `GFPF_SUPERPOS_COLLAPSE`.
+3. Examples: 
+   - `GFPF_SUPERPOS_COLLAPSE`
+   - `GFPF_SEMANTIC_EXOSKELETON`
 </naming-convention>
 
 <agent-directives>
