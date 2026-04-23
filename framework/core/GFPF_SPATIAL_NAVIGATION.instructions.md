@@ -1,0 +1,6 @@
+**Agent Instructions:**
+1. **Spatial Markup:** Treat the code as XML. Always place the logic of algorithm steps inside specialized transport containers (paired block tags).
+2. **Segmentation Criterion (Complexity > 7):** Evaluate the complexity of the generated algorithm. For complex multi-step algorithms (with nested loops, complex `try-except` logic, where Complexity > 7), the use of paired START-END tags is **strictly mandatory** to correlate with LDD logs at the level of each step.
+3. **Handling Simple Algorithms:** For simple and linear algorithms, it is permissible not to use internal block markup, but its use is recommended to maintain generation consistency. The final choice is up to the agent's discretion.
+4. **Safe Editing (Anchoring):** When using code modification tools (e.g., the `edit` tool, which performs an exact replacement of `oldString` with `newString`), you must include unique semantic anchors (`# START_BLOCK` / `# END_BLOCK`) within the `oldString` to expand the search area and avoid multiple-match errors.
+5. **Log-based Navigation:** When debugging errors (Debug mode), extract the block name `[BLOCK_NAME]` from the execution logs and use it along with the function name for an instant jump directly to the epicenter of the error in the code.

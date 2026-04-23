@@ -19,4 +19,9 @@ last_updated: 2026-04-23
 * **Description:** [GFPF_ZERO_CONTEXT_SURVIVAL.description.md](./GFPF_ZERO_CONTEXT_SURVIVAL.description.md) - Rationale and theory of self-sufficient modules, SFT-priming, and mitigating context burnout.
 * **Instructions:** [GFPF_ZERO_CONTEXT_SURVIVAL.instructions.md](./GFPF_ZERO_CONTEXT_SURVIVAL.instructions.md) - Executable rules for explicit contracts, semantic enrichment, and bug-fix traceability.
 * **FPF Mapping:** [GFPF_ZERO_CONTEXT_SURVIVAL.fpf.md](./GFPF_ZERO_CONTEXT_SURVIVAL.fpf.md) - First Principles derivation (Role-Method-Work Alignment, Context Algebra, and Evidence Management).
+
+## GFPF_SPATIAL_NAVIGATION
+* **Description:** [GFPF_SPATIAL_NAVIGATION.description.md](./GFPF_SPATIAL_NAVIGATION.description.md) - Rationale and theory of treating code as an XML-DOM to optimize LLM attention mechanisms.
+* **Instructions:** [GFPF_SPATIAL_NAVIGATION.instructions.md](./GFPF_SPATIAL_NAVIGATION.instructions.md) - Executable rules for spatial markup, block segmentation (Complexity > 7), safe editing (anchoring), and log-based navigation.
+* **FPF Mapping:** [GFPF_SPATIAL_NAVIGATION.fpf.md](./GFPF_SPATIAL_NAVIGATION.fpf.md) - First Principles derivation (Context Algebra/U.Scope, U.WorkScope, and E/E-LOG traceability).
 </registry>
