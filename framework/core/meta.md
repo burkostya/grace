@@ -1,6 +1,6 @@
 ---
 type: meta_protocol
-version: 1.2
+version: 1.3
 ---
 # GFPF (GRACE First Principles Framework) Framework Meta-Protocol
 
@@ -17,6 +17,7 @@ This file defines the meta-rules for agents interacting with the framework direc
    - `GFPF_ZERO_CONTEXT_SURVIVAL`
    - `GFPF_SPATIAL_NAVIGATION`
    - `GFPF_LOG_DRIVEN_DEVELOPMENT`
+   - `GFPF_SFT_PRIMING`
 </naming-convention>
 
 <agent-directives>

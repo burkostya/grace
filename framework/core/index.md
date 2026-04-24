@@ -1,6 +1,6 @@
 ---
 type: index
-last_updated: 2026-04-23
+last_updated: 2026-04-24
 ---
 # Core Framework Index
 
@@ -29,4 +29,9 @@ last_updated: 2026-04-23
 * **Description:** [GFPF_LOG_DRIVEN_DEVELOPMENT.description.md](./GFPF_LOG_DRIVEN_DEVELOPMENT.description.md) - Rationale and theory of using logs as a transport layer for agent context and AI Belief State.
 * **Instructions:** [GFPF_LOG_DRIVEN_DEVELOPMENT.instructions.md](./GFPF_LOG_DRIVEN_DEVELOPMENT.instructions.md) - Executable rules for strict log formatting, IMP scaling, Exception Enrichment, and native LDD pytest.
 * **FPF Mapping:** [GFPF_LOG_DRIVEN_DEVELOPMENT.fpf.md](./GFPF_LOG_DRIVEN_DEVELOPMENT.fpf.md) - First Principles derivation (U.Method vs U.Work, Evidence Graph, Bounded Contexts, CSLC, and Abductive Loop).
+
+## GFPF_SFT_PRIMING
+* **Description:** [GFPF_SFT_PRIMING.description.md](./GFPF_SFT_PRIMING.description.md) - Rationale and theory of aligning agent context with Supervised Fine-Tuning patterns.
+* **Instructions:** [GFPF_SFT_PRIMING.instructions.md](./GFPF_SFT_PRIMING.instructions.md) - Executable rules for mandatory docstring verbalization before logic generation.
+* **FPF Mapping:** [GFPF_SFT_PRIMING.fpf.md](./GFPF_SFT_PRIMING.fpf.md) - First Principles derivation (I/D/S Discipline, Temporal Duality, and Language-State Transduction).
 </registry>
