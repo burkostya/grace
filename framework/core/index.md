@@ -34,4 +34,9 @@ last_updated: 2026-04-24
 * **Description:** [GFPF_SFT_PRIMING.description.md](./GFPF_SFT_PRIMING.description.md) - Rationale and theory of aligning agent context with Supervised Fine-Tuning patterns.
 * **Instructions:** [GFPF_SFT_PRIMING.instructions.md](./GFPF_SFT_PRIMING.instructions.md) - Executable rules for mandatory docstring verbalization before logic generation.
 * **FPF Mapping:** [GFPF_SFT_PRIMING.fpf.md](./GFPF_SFT_PRIMING.fpf.md) - First Principles derivation (I/D/S Discipline, Temporal Duality, and Language-State Transduction).
+
+## GFPF_GENERATION_COMPLETENESS
+* **Description:** [GFPF_GENERATION_COMPLETENESS.description.md](./GFPF_GENERATION_COMPLETENESS.description.md) - Rationale and theory of zero tolerance for abbreviations, 100% full artifact generation, and maintaining holonic integrity.
+* **Instructions:** [GFPF_GENERATION_COMPLETENESS.instructions.md](./GFPF_GENERATION_COMPLETENESS.instructions.md) - Executable rules for preventing lazy generation patterns (`...`, `pass`) and triggering self-correction on context skips.
+* **FPF Mapping:** [GFPF_GENERATION_COMPLETENESS.fpf.md](./GFPF_GENERATION_COMPLETENESS.fpf.md) - First Principles derivation (I/D/S Discipline, Holonic Foundation, Trust & Assurance Calculus, and Deontic Commitments).
 </registry>
