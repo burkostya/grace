@@ -39,4 +39,9 @@ last_updated: 2026-04-24
 * **Description:** [GFPF_GENERATION_COMPLETENESS.description.md](./GFPF_GENERATION_COMPLETENESS.description.md) - Rationale and theory of zero tolerance for abbreviations, 100% full artifact generation, and maintaining holonic integrity.
 * **Instructions:** [GFPF_GENERATION_COMPLETENESS.instructions.md](./GFPF_GENERATION_COMPLETENESS.instructions.md) - Executable rules for preventing lazy generation patterns (`...`, `pass`) and triggering self-correction on context skips.
 * **FPF Mapping:** [GFPF_GENERATION_COMPLETENESS.fpf.md](./GFPF_GENERATION_COMPLETENESS.fpf.md) - First Principles derivation (I/D/S Discipline, Holonic Foundation, Trust & Assurance Calculus, and Deontic Commitments).
+
+## GFPF_WORKFLOW_ORCHESTRATION
+* **Description:** [GFPF_WORKFLOW_ORCHESTRATION.description.md](./GFPF_WORKFLOW_ORCHESTRATION.description.md) - Rationale and theory of phase isolation, mitigating cognitive overload and epistemic drift.
+* **Instructions:** [GFPF_WORKFLOW_ORCHESTRATION.instructions.md](./GFPF_WORKFLOW_ORCHESTRATION.instructions.md) - Executable rules for strict transition triggers across Architect, Code, Debug, and QA modes.
+* **FPF Mapping:** [GFPF_WORKFLOW_ORCHESTRATION.fpf.md](./GFPF_WORKFLOW_ORCHESTRATION.fpf.md) - First Principles derivation (Separation of Plans/Methods/Work, Bounded Contexts, and ADI Cycle).
 </registry>
