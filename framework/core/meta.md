@@ -20,6 +20,7 @@ This file defines the meta-rules for agents interacting with the framework direc
    - `GFPF_SFT_PRIMING`
    - `GFPF_GENERATION_COMPLETENESS`
    - `GFPF_WORKFLOW_ORCHESTRATION`
+   - `GFPF_ANTI_LOOP_PROTOCOL`
 </naming-convention>
 
 <agent-directives>

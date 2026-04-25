@@ -44,4 +44,9 @@ last_updated: 2026-04-24
 * **Description:** [GFPF_WORKFLOW_ORCHESTRATION.description.md](./GFPF_WORKFLOW_ORCHESTRATION.description.md) - Rationale and theory of phase isolation, mitigating cognitive overload and epistemic drift.
 * **Instructions:** [GFPF_WORKFLOW_ORCHESTRATION.instructions.md](./GFPF_WORKFLOW_ORCHESTRATION.instructions.md) - Executable rules for strict transition triggers across Architect, Code, Debug, and QA modes.
 * **FPF Mapping:** [GFPF_WORKFLOW_ORCHESTRATION.fpf.md](./GFPF_WORKFLOW_ORCHESTRATION.fpf.md) - First Principles derivation (Separation of Plans/Methods/Work, Bounded Contexts, and ADI Cycle).
+
+## GFPF_ANTI_LOOP_PROTOCOL
+* **Description:** [GFPF_ANTI_LOOP_PROTOCOL.description.md](./GFPF_ANTI_LOOP_PROTOCOL.description.md) - Rationale and theory of preventing infinite loops and context fatigue during testing via attempt tracking and escalation.
+* **Instructions:** [GFPF_ANTI_LOOP_PROTOCOL.instructions.md](./GFPF_ANTI_LOOP_PROTOCOL.instructions.md) - Executable rules for state tracking, architectural isolation, and the critical output escalation path.
+* **FPF Mapping:** [GFPF_ANTI_LOOP_PROTOCOL.fpf.md](./GFPF_ANTI_LOOP_PROTOCOL.fpf.md) - First Principles derivation (External Transformer, U.Work, OperationalGate, Enactment Budget, E/E-LOG).
 </registry>
