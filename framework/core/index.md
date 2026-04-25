@@ -1,6 +1,6 @@
 ---
 type: index
-last_updated: 2026-04-24
+last_updated: 2026-04-26
 ---
 # Core Framework Index
 
@@ -49,4 +49,9 @@ last_updated: 2026-04-24
 * **Description:** [GFPF_ANTI_LOOP_PROTOCOL.description.md](./GFPF_ANTI_LOOP_PROTOCOL.description.md) - Rationale and theory of preventing infinite loops and context fatigue during testing via attempt tracking and escalation.
 * **Instructions:** [GFPF_ANTI_LOOP_PROTOCOL.instructions.md](./GFPF_ANTI_LOOP_PROTOCOL.instructions.md) - Executable rules for state tracking, architectural isolation, and the critical output escalation path.
 * **FPF Mapping:** [GFPF_ANTI_LOOP_PROTOCOL.fpf.md](./GFPF_ANTI_LOOP_PROTOCOL.fpf.md) - First Principles derivation (External Transformer, U.Work, OperationalGate, Enactment Budget, E/E-LOG).
+
+## GFPF_MODIFICATION_SAFETY
+* **Description:** [GFPF_MODIFICATION_SAFETY.description.md](./GFPF_MODIFICATION_SAFETY.description.md) - Rationale and theory behind safe code editing, guaranteeing indentation integrity, and leaving context scars.
+* **Instructions:** [GFPF_MODIFICATION_SAFETY.instructions.md](./GFPF_MODIFICATION_SAFETY.instructions.md) - Executable rules for the "Read before edit" requirement, use of semantic anchors, and `# BUG_FIX_CONTEXT` comments.
+* **FPF Mapping:** [GFPF_MODIFICATION_SAFETY.fpf.md](./GFPF_MODIFICATION_SAFETY.fpf.md) - First Principles derivation (Canonical Reasoning Cycle [Evidence → Operate], U.ContextSlice, U.WorkScope, and U.ClaimScope).
 </registry>
