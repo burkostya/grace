@@ -1,0 +1,22 @@
+### 1. Top-Down Detailization (`$DOCUMENT_PLAN`)
+*In GRACE:* Forcing the LLM to write a table of contents/plan first, and only then generate the text.
+*In FPF this is realized via patterns:* **E.10.D2 (I/D/S Discipline)** and **A.15 (Role-Method-Work Alignment)**.
+
+* **E.10.D2 Intension–Description–Specification Discipline (I/D/S):** FPF strictly forbids mixing Intension (what we are talking about in principle) and Specification (detailed rules). By generating a `$DOCUMENT_PLAN`, we force the LLM to fixate the `Intension` (semantic framework) before it moves on to `Specification` (filling in the text).
+* **A.15.2 `U.WorkPlan` vs A.15.1 `U.Work`:** FPF requires separating the plan (intent) from the work (execution). Autoregressive text generation by an LLM is `U.Work` (a process). The table of contents is `U.WorkPlan`. If an LLM starts working without a `U.WorkPlan`, it violates the principle of Temporal Duality.
+* **Example:** Instead of asking the agent to "write a microservice architecture" (which would trigger uncontrolled `U.Work`), we demand it first produce a `U.WorkPlan` (a list of modules). Once the plan is in the context, every subsequent step of `U.Work` is forced to check against it, maintaining discipline.
+
+### 2. Semantic Context Switchers (`$START_...` and `$END_...` tags)
+*In GRACE:* Wrapping logical blocks in rigid tags to focus the LLM's attention.
+*In FPF this is realized via patterns:* **A.1.1 `U.BoundedContext`** and **E.17.AUD.OOTD (AuthoredUnit Object-of-Talk Discipline)**.
+
+* **A.1.1 `U.BoundedContext`:** In FPF, meaning exists only within a defined boundary. The `$START` and `$END` tags act as physical boundaries for a `U.BoundedContext` within the text stream. What is inside the `$START_DATABASE_SCHEMA` tag has its own local meaning and rules, and the model must not "drag" terms into it from the `$START_UI_DESIGN` context.
+* **E.17.AUD.OOTD (Object-of-Talk Discipline):** This FPF pattern requires that an authored unit maintain stability around a *single* object of talk. Tags force explicit transitions between objects of talk, preventing authored-unit drift—where an LLM smoothly bleeds from business logic into API implementation details within a single paragraph.
+
+### 3. Explicit Intent Definition (The Contract Block: PURPOSE, RATIONALE, ACCEPTANCE)
+*In GRACE:* Mandatory description of the goal, reasons, and acceptance criteria before starting code or text generation.
+*In FPF this is realized via patterns:* **E.9 (Design-Rationale Record)** and **A.2.3 (`U.PromiseContent`)**.
+
+* **E.9 Design-Rationale Record (DRR):** In FPF, system evolution must be auditable. The `RATIONALE` field is a micro-instance of the DRR pattern. It records *why* a decision was made so that a future agent (or developer) doesn't tear down a critical workaround, thinking it's just bad code. This keeps "Epistemic Debt" under control.
+* **A.2.3 `U.PromiseContent`:** In FPF, system promises are separated from their implementation. The `ACCEPTANCE_CRITERIA` block is an implementation of `acceptanceSpec` from `U.PromiseContent`. We create a formal contract by which the work result (`U.Work`) will be evaluated (adjudication). 
+

@@ -54,4 +54,9 @@ last_updated: 2026-04-26
 * **Description:** [GFPF_MODIFICATION_SAFETY.description.md](./GFPF_MODIFICATION_SAFETY.description.md) - Rationale and theory behind safe code editing, guaranteeing indentation integrity, and leaving context scars.
 * **Instructions:** [GFPF_MODIFICATION_SAFETY.instructions.md](./GFPF_MODIFICATION_SAFETY.instructions.md) - Executable rules for the "Read before edit" requirement, use of semantic anchors, and `# BUG_FIX_CONTEXT` comments.
 * **FPF Mapping:** [GFPF_MODIFICATION_SAFETY.fpf.md](./GFPF_MODIFICATION_SAFETY.fpf.md) - First Principles derivation (Canonical Reasoning Cycle [Evidence → Operate], U.ContextSlice, U.WorkScope, and U.ClaimScope).
+
+## GFPF_DOCUMENT_PROTOCOL
+* **Description:** [GFPF_DOCUMENT_PROTOCOL.description.md](./GFPF_DOCUMENT_PROTOCOL.description.md) - Rationale and theory of cognitive priming via top-down detailization and semantic context switchers.
+* **Instructions:** [GFPF_DOCUMENT_PROTOCOL.instructions.md](./GFPF_DOCUMENT_PROTOCOL.instructions.md) - Executable rules for generating document plans, using bounding tags, and defining explicit intent contracts.
+* **FPF Mapping:** [GFPF_DOCUMENT_PROTOCOL.fpf.md](./GFPF_DOCUMENT_PROTOCOL.fpf.md) - First Principles derivation (I/D/S Discipline, U.BoundedContext, and Design-Rationale Record).
 </registry>
