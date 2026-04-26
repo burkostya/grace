@@ -59,4 +59,9 @@ last_updated: 2026-04-26
 * **Description:** [GFPF_DOCUMENT_PROTOCOL.description.md](./GFPF_DOCUMENT_PROTOCOL.description.md) - Rationale and theory of cognitive priming via top-down detailization and semantic context switchers.
 * **Instructions:** [GFPF_DOCUMENT_PROTOCOL.instructions.md](./GFPF_DOCUMENT_PROTOCOL.instructions.md) - Executable rules for generating document plans, using bounding tags, and defining explicit intent contracts.
 * **FPF Mapping:** [GFPF_DOCUMENT_PROTOCOL.fpf.md](./GFPF_DOCUMENT_PROTOCOL.fpf.md) - First Principles derivation (I/D/S Discipline, U.BoundedContext, and Design-Rationale Record).
+
+## GFPF_GRAPH_PROTOCOL
+* **Description:** [GFPF_GRAPH_PROTOCOL.description.md](./GFPF_GRAPH_PROTOCOL.description.md) - Rationale and theory of semantic codebase mapping via XML DOM.
+* **Instructions:** [GFPF_GRAPH_PROTOCOL.instructions.md](./GFPF_GRAPH_PROTOCOL.instructions.md) - Executable rules for generating and linking XML knowledge graphs.
+* **FPF Mapping:** [GFPF_GRAPH_PROTOCOL.fpf.md](./GFPF_GRAPH_PROTOCOL.fpf.md) - First Principles derivation (Spatial Navigation, Architecture Description, Top-Down Strategy).
 </registry>

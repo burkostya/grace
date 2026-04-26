@@ -1,6 +1,6 @@
 ---
 type: meta_protocol
-version: 1.7
+version: 1.8
 ---
 # GFPF (GRACE First Principles Framework) Framework Meta-Protocol
 
@@ -23,6 +23,7 @@ This file defines the meta-rules for agents interacting with the framework direc
    - `GFPF_ANTI_LOOP_PROTOCOL`
    - `GFPF_MODIFICATION_SAFETY`
    - `GFPF_DOCUMENT_PROTOCOL`
+   - `GFPF_GRAPH_PROTOCOL`
 </naming-convention>
 
 <agent-directives>
