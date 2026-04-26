@@ -12,6 +12,7 @@ This file defines the meta-rules for agents interacting with the framework direc
 1. All core techniques MUST start with `GFPF_` (GRACE First Principles Framework).
 2. Followed by short, LLM-descriptive tokens in SNAKE_CASE and CAPITALS.
 3. Examples: 
+   - `GFPF_STRATEGIC_UNCERTAINTY`
    - `GFPF_SUPERPOS_COLLAPSE`
    - `GFPF_SEMANTIC_EXOSKELETON`
    - `GFPF_ZERO_CONTEXT_SURVIVAL`

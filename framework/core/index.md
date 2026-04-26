@@ -5,6 +5,11 @@ last_updated: 2026-04-26
 # Core Framework Index
 
 <registry>
+## GFPF_STRATEGIC_UNCERTAINTY
+* **Description:** [GFPF_STRATEGIC_UNCERTAINTY.description.md](./GFPF_STRATEGIC_UNCERTAINTY.description.md) - Rationale and theory of forming a criteria space to avoid local optima before searching for technical solutions.
+* **Instructions:** [GFPF_STRATEGIC_UNCERTAINTY.instructions.md](./GFPF_STRATEGIC_UNCERTAINTY.instructions.md) - Executable rules for delaying commitment and formulating explicit evaluation axes.
+* **FPF Mapping:** [GFPF_STRATEGIC_UNCERTAINTY.fpf.md](./GFPF_STRATEGIC_UNCERTAINTY.fpf.md) - First Principles derivation (E/E-LOG, Abductive Loop Plausibility Filters, Bounded Contexts).
+
 ## GFPF_SUPERPOS_COLLAPSE
 * **Description:** [GFPF_SUPERPOS_COLLAPSE.description.md](./GFPF_SUPERPOS_COLLAPSE.description.md) - Rationale and theory of avoiding premature convergence.
 * **Instructions:** [GFPF_SUPERPOS_COLLAPSE.instructions.md](./GFPF_SUPERPOS_COLLAPSE.instructions.md) - Executable prompts and agent rules.
