@@ -1,6 +1,6 @@
 ---
 type: index
-last_updated: 2026-04-26
+last_updated: 2026-04-27
 ---
 # Core Framework Index
 
@@ -69,4 +69,9 @@ last_updated: 2026-04-26
 * **Description:** [GFPF_GRAPH_PROTOCOL.description.md](./GFPF_GRAPH_PROTOCOL.description.md) - Rationale and theory of semantic codebase mapping via XML DOM.
 * **Instructions:** [GFPF_GRAPH_PROTOCOL.instructions.md](./GFPF_GRAPH_PROTOCOL.instructions.md) - Executable rules for generating and linking XML knowledge graphs.
 * **FPF Mapping:** [GFPF_GRAPH_PROTOCOL.fpf.md](./GFPF_GRAPH_PROTOCOL.fpf.md) - First Principles derivation (Spatial Navigation, Architecture Description, Top-Down Strategy).
+
+## GFPF_CONTEXT_ENRICHMENT
+* **Description:** [GFPF_CONTEXT_ENRICHMENT.description.md](./GFPF_CONTEXT_ENRICHMENT.description.md) - Rationale and theory of RAG optimization, semantic density, and SFT activation via explicit metadata tags.
+* **Instructions:** [GFPF_CONTEXT_ENRICHMENT.instructions.md](./GFPF_CONTEXT_ENRICHMENT.instructions.md) - Executable rules for semantic density over verbosity, mandatory contract enrichment, and pattern SFT priming.
+* **FPF Mapping:** [GFPF_CONTEXT_ENRICHMENT.fpf.md](./GFPF_CONTEXT_ENRICHMENT.fpf.md) - First Principles derivation (I/D/S Discipline, Relational Precision Restoration, and USM Scope Coverage for RAG).
 </registry>
