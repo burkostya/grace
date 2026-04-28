@@ -79,4 +79,9 @@ last_updated: 2026-04-27
 * **Description:** [GFPF_SEMANTIC_TRACE_VERIFICATION.description.md](./GFPF_SEMANTIC_TRACE_VERIFICATION.description.md) - Rationale and theory of avoiding the "Green Test Trap" and relying on LDD logs for semantic proof.
 * **Instructions:** [GFPF_SEMANTIC_TRACE_VERIFICATION.instructions.md](./GFPF_SEMANTIC_TRACE_VERIFICATION.instructions.md) - Executable rules for aggressive context gathering, log auditing, and trace-vs-contract evaluation.
 * **FPF Mapping:** [GFPF_SEMANTIC_TRACE_VERIFICATION.fpf.md](./GFPF_SEMANTIC_TRACE_VERIFICATION.fpf.md) - First Principles derivation (Assurance and Evidence Pattern, U.ClaimScope vs. U.WorkScope, and Scope-Sensitive Guards).
+
+## GFPF_DIAGNOSTIC_TRIO
+* **Description:** [GFPF_DIAGNOSTIC_TRIO.description.md](./GFPF_DIAGNOSTIC_TRIO.description.md) - Rationale and theory of systematic diagnostics and code immunization to avoid the "Green Test Trap" and agent looping.
+* **Instructions:** [GFPF_DIAGNOSTIC_TRIO.instructions.md](./GFPF_DIAGNOSTIC_TRIO.instructions.md) - Executable rules for aggressive context gathering, log analysis, and injecting semantic scars (`# BUG_FIX_CONTEXT`).
+* **FPF Mapping:** [GFPF_DIAGNOSTIC_TRIO.fpf.md](./GFPF_DIAGNOSTIC_TRIO.fpf.md) - First Principles derivation (U.BoundedContext, Evidence Graph Referring, Role-Method-Work Alignment, Abductive Loop, Design-Rationale Record).
 </registry>
